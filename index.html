@@ -15,7 +15,7 @@
             color: #ffffff;
         }
         .container-main {
-            padding-bottom: 6rem;
+            padding-bottom: 8rem; /* Ajusté pour éviter le chevauchement avec la barre de navigation */
             position: relative;
             z-index: 10;
         }
@@ -200,6 +200,7 @@
         .product-page-content {
             position: relative;
             z-index: 10;
+            padding-bottom: 8rem; /* Ajout d'une marge pour les boutons */
         }
 
         .action-button {
@@ -236,6 +237,7 @@
             overflow-y: auto;
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
+            padding-bottom: 6rem; /* Ajout de padding pour le contenu */
         }
         .cart-page.open {
             transform: translateX(0);
@@ -280,13 +282,74 @@
             object-fit: contain; /* Assure que le contenu s'adapte sans être déformé */
             object-position: center;
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #2a2a47;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
         
+        .product-page-content {
+            padding-bottom: 8rem; /* Assure que les boutons ne sont pas cachés */
+        }
+        
+        .weight-button {
+            background-color: #3f3f5a;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: #ffffff;
+            transition: background-color 0.2s, transform 0.2s;
+            text-align: center;
+        }
+        .weight-button.active {
+            background-color: #7b4397;
+            transform: scale(1.05);
+        }
+        .weight-button span {
+            display: block;
+        }
+        .weight-button .weight-text {
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        .weight-button .price-text {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body class="bg-[#1A1A2E] text-white">
 
     <!-- Section principale de l'application -->
-    <div id="main-app" class="container-main mx-auto p-4 max-w-sm overflow-hidden">
+    <div id="main-app" class="container-main mx-auto p-4 max-w-sm overflow-hidden pb-32">
         <!-- Bannière Héro -->
         <header class="flex flex-col items-center justify-center p-8">
             <div id="hero-carousel-container" class="relative w-full h-auto bg-gray-700 rounded-xl overflow-hidden shadow-lg">
@@ -321,7 +384,7 @@
 
     <!-- Section Fiche Produit (cachée par défaut) -->
     <div id="product-page" class="hidden relative">
-        <div class="product-page-content mx-auto p-4 max-w-sm overflow-hidden">
+        <div class="product-page-content mx-auto p-4 max-w-sm overflow-hidden pb-32">
             <header class="p-4 bg-transparent text-white flex justify-between items-center sticky top-0 z-50">
                 <button onclick="window.hideProduct()" class="text-white text-2xl p-2 rounded-full hover:bg-gray-800 transition-colors"><i class="fas fa-arrow-left"></i></button>
                 <h1 id="product-category" class="text-xl font-semibold uppercase"></h1>
@@ -337,7 +400,7 @@
                 </button>
                 <button class="carousel-button right" onclick="window.nextSlide()">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
             </div>
@@ -348,8 +411,6 @@
                 <div id="product-options" class="mb-6">
                     <!-- Les options de variété et de poids seront injectées ici -->
                 </div>
-                
-                <p class="text-center text-red-400 mb-6">Veuillez sélectionner un poids</p>
 
                 <div class="flex flex-col space-y-4">
                     <button id="buy-now-btn" class="action-button order-button">
@@ -378,6 +439,14 @@
                 <i class="fab fa-telegram-plane"></i>
                 <span class="ml-2">COMMANDER</span>
             </button>
+        </div>
+    </div>
+
+    <!-- Modal pour les messages -->
+    <div id="message-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <p id="modal-text" class="text-lg font-bold mb-4"></p>
+            <button onclick="window.closeModal()" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full">OK</button>
         </div>
     </div>
 
@@ -444,6 +513,8 @@
         let userId = null;
         let cartPath = null;
         let currentFilter = null;
+        let quantity = 1;
+        let selectedWeight = null;
 
         setLogLevel('debug'); // Active les logs pour le débogage de Firestore
 
@@ -476,10 +547,12 @@
                 id: 'topMousse',
                 name: 'Top Mousse by Districtz Farm',
                 prices: {
-                    '3.5g': 50,
-                    '5g': 65,
-                    '10g': 120,
-                    '20g': 200
+                    '3.5g': 35,
+                    '5g': 45,
+                    '10g': 80,
+                    '12.5g': 95,
+                    '25g': 175,
+                    '50g': 325
                 },
                 category: 'hash',
                 varieties: ['Mousse'],
@@ -542,7 +615,8 @@
         const heroCarouselContainer = document.getElementById('hero-carousel-container');
         const heroCarouselTrack = document.getElementById('hero-carousel-track');
         const heroCarouselDots = document.getElementById('hero-carousel-dots');
-        
+        const quantityDisplay = document.getElementById('quantity-display');
+
         const heroImages = [
             '1757022565259.jpg',
             'Picsart_25-05-16_23-24-53-435.png'
@@ -554,6 +628,7 @@
         let currentSlide = 0;
         let startX = 0;
         let endX = 0;
+        let selectedVariety = null;
 
         function updateHeroCarousel() {
             heroCarouselTrack.innerHTML = '';
@@ -686,6 +761,19 @@
                 window.nextSlide();
             }
         });
+        
+        // Fonctions pour les messages et modales
+        function showMessage(message) {
+            const modal = document.getElementById('message-modal');
+            const modalText = document.getElementById('modal-text');
+            modalText.textContent = message;
+            modal.classList.remove('hidden');
+        }
+
+        window.closeModal = function() {
+            const modal = document.getElementById('message-modal');
+            modal.classList.add('hidden');
+        }
 
         // Fonctions pour afficher et masquer les sections
         function showProduct(productId) {
@@ -694,6 +782,11 @@
                 console.error("Produit non trouvé:", productId);
                 return;
             }
+            
+            // Réinitialiser les sélections
+            selectedVariety = null;
+            selectedWeight = null;
+            quantity = 1;
 
             productName.textContent = currentProduct.name;
             productCategoryTitle.textContent = currentProduct.category.toUpperCase();
@@ -716,46 +809,59 @@
             });
             updateCarousel();
 
-            // Construire les options
+            // Construire les options de variété et de poids
             productOptions.innerHTML = `
                 <div class="mb-4">
                     <h3 class="text-xl font-bold mb-2">Variété</h3>
                     <div class="flex flex-wrap gap-2" id="variety-options">
                         ${currentProduct.varieties.map((v, i) => `
-                            <button data-value="${v}" class="px-3 py-1 rounded-full border border-gray-600 hover:bg-gray-700 transition-colors text-xs variety-btn ${i === 0 ? 'bg-gray-700' : ''}">${v}</button>
+                            <button data-value="${v}" class="px-3 py-1 rounded-full border border-gray-600 hover:bg-gray-700 transition-colors text-xs variety-btn">${v}</button>
                         `).join('')}
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold mb-2">Poids</h3>
-                    <div class="grid grid-cols-2 gap-2" id="weight-options">
+                    <h3 class="text-xl font-bold mb-2">Poids et Prix</h3>
+                    <div class="flex flex-wrap gap-2" id="weight-options">
                         ${Object.keys(currentProduct.prices).map((w, i) => `
-                            <button data-value="${w}" class="flex flex-col items-center p-3 rounded-xl border border-gray-600 hover:bg-gray-700 transition-colors weight-btn ${i === 0 ? 'bg-gray-700' : ''}">
-                                <span class="font-bold text-sm">${w}</span>
-                                <span class="text-xs text-gray-400">${currentProduct.prices[w]}€</span>
+                            <button data-weight="${w}" class="weight-button" onclick="window.selectWeight('${w}')">
+                                <span class="weight-text">${w}</span>
+                                <span class="price-text">${currentProduct.prices[w]}€</span>
                             </button>
                         `).join('')}
                     </div>
                 </div>
             `;
             
-            // Gérer les sélections de variété et de poids
+            // Gérer les sélections de variété
             document.querySelectorAll('.variety-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.variety-btn').forEach(b => b.classList.remove('bg-gray-700'));
                     btn.classList.add('bg-gray-700');
+                    selectedVariety = btn.dataset.value;
                 });
             });
-            document.querySelectorAll('.weight-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('bg-gray-700'));
-                    btn.classList.add('bg-gray-700');
-                });
-            });
+
+            // Pré-sélectionner la première variété et le premier poids si existants
+            const firstVarietyBtn = document.querySelector('#variety-options .variety-btn');
+            if (firstVarietyBtn) {
+                firstVarietyBtn.classList.add('bg-gray-700');
+                selectedVariety = firstVarietyBtn.dataset.value;
+            }
+            const firstWeightBtn = document.querySelector('#weight-options .weight-button');
+            if (firstWeightBtn) {
+                firstWeightBtn.classList.add('active');
+                selectedWeight = firstWeightBtn.dataset.weight;
+            }
 
             mainApp.classList.add('hidden');
             productPage.classList.remove('hidden');
         }
+
+        window.selectWeight = function(weight) {
+            selectedWeight = weight;
+            document.querySelectorAll('.weight-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-weight="${weight}"]`).classList.add('active');
+        };
 
         window.showHome = function() {
             closeCartPage();
@@ -838,7 +944,7 @@
                     </div>
                     <div class="flex-1">
                         <h4 class="font-semibold">${item.name}</h4>
-                        <p class="text-sm text-gray-400">${item.variety}, ${item.weight}</p>
+                        <p class="text-sm text-gray-400">${item.weight} - ${item.variety}</p>
                         <p class="text-sm text-gray-400">Quantité: ${item.quantity}</p>
                     </div>
                     <div class="text-right">
@@ -855,58 +961,55 @@
         
         // Fonctions d'interaction avec le panier
         addToCartBtn.addEventListener('click', async () => {
-            const varietyBtn = document.querySelector('#variety-options .bg-gray-700');
-            const weightBtn = document.querySelector('#weight-options .bg-gray-700');
-            
-            if (!varietyBtn || !weightBtn) {
-                alert("Veuillez sélectionner une variété et un poids.");
+            if (!selectedVariety || !selectedWeight) {
+                showMessage("Veuillez sélectionner une variété et un poids.");
                 return;
             }
-
-            const variety = varietyBtn.dataset.value;
-            const weight = weightBtn.dataset.value;
-            const price = currentProduct.prices ? currentProduct.prices[weight] : currentProduct.price;
+            const variety = selectedVariety;
+            const weight = selectedWeight;
             const productId = currentProduct.id;
+            const price = currentProduct.prices[weight];
+            const quantity = 1; // La quantité est toujours 1
 
             if (!userId) {
                 console.error("Utilisateur non authentifié.");
                 return;
             }
 
-            const cartItemRef = doc(db, cartPath, `${productId}-${variety}-${weight}`);
+            const cartItemRef = doc(db, cartPath, `${productId}-${weight}-${variety}`);
             const cartDoc = await getDoc(cartItemRef);
 
             if (cartDoc.exists()) {
                 const currentQuantity = cartDoc.data().quantity;
-                await updateDoc(cartItemRef, { quantity: currentQuantity + 1 });
+                await updateDoc(cartItemRef, { quantity: currentQuantity + quantity });
             } else {
                 await setDoc(cartItemRef, {
-                    id: `${productId}-${variety}-${weight}`,
+                    id: `${productId}-${weight}-${variety}`,
                     name: currentProduct.name,
                     variety: variety,
                     weight: weight,
                     price: price,
-                    quantity: 1
+                    quantity: quantity
                 });
             }
+            showMessage("Produit ajouté au panier !");
         });
 
         buyNowBtn.addEventListener('click', () => {
-            const varietyBtn = document.querySelector('#variety-options .bg-gray-700');
-            const weightBtn = document.querySelector('#weight-options .bg-gray-700');
-            
-            if (!varietyBtn || !weightBtn) {
-                alert("Veuillez sélectionner une variété et un poids.");
+             if (!selectedVariety || !selectedWeight) {
+                showMessage("Veuillez sélectionner une variété et un poids.");
                 return;
             }
-            const variety = varietyBtn.dataset.value;
-            const weight = weightBtn.dataset.value;
-            const price = currentProduct.prices ? currentProduct.prices[weight] : currentProduct.price;
+            const variety = selectedVariety;
+            const weight = selectedWeight;
+            const price = currentProduct.prices[weight];
+            const quantity = 1;
             const message = `Bonjour, je souhaite commander :
             - ${currentProduct.name}
             - Variété: ${variety}
             - Poids: ${weight}
-            - Prix: ${price}€`;
+            - Quantité: ${quantity}
+            - Prix: ${price * quantity}€`;
             const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
             window.location.href = telegramUrl;
         });
@@ -934,6 +1037,10 @@
 
         window.placeOrder = () => {
             const items = Object.values(cartItems);
+            if (items.length === 0) {
+                showMessage("Votre panier est vide. Ajoutez des produits avant de commander.");
+                return;
+            }
             let message = "Salut, je voudrais passer une commande :\n\n";
             let total = 0;
 
@@ -956,6 +1063,8 @@
         window.hideProduct = hideProduct;
         window.openCartPage = openCartPage;
         window.closeCartPage = closeCartPage;
+        window.closeModal = closeModal;
+        window.selectWeight = selectWeight;
     </script>
 </body>
 </html>
