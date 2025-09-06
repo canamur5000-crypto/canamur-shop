@@ -485,18 +485,20 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-
+        
         // IMPORTANT: Ces variables sont automatiquement injectées par l'environnement
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = {
-          apiKey: "YOUR_API_KEY",
-          authDomain: "YOUR_AUTH_DOMAIN",
-          projectId: "YOUR_PROJECT_ID",
-          storageBucket: "YOUR_STORAGE_BUCKET",
-          messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-          appId: "YOUR_APP_ID"
-        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        let firebaseConfig = {
+            // Placeholder, sera écrasé par la configuration injectée
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
         
         // Si les variables de l'environnement sont disponibles, on les utilise pour la configuration Firebase
         const injectedFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
