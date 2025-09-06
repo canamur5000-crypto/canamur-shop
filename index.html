@@ -531,6 +531,8 @@
                 cartPath = `artifacts/${appId}/users/${userId}/cart`;
                 console.log("Authentification réussie. User ID:", userId);
                 listenToCart(); // Commence à écouter le panier
+                // Ajout de l'événement click ici pour s'assurer que l'userId est prêt
+                addToCartBtn.addEventListener('click', handleAddToCart);
             } else {
                 console.log("Utilisateur non authentifié. Connexion anonyme en cours...");
                 try {
@@ -956,21 +958,23 @@
         }
         
         // Fonctions d'interaction avec le panier
-        addToCartBtn.addEventListener('click', async () => {
+        async function handleAddToCart() {
+            if (!userId) {
+                // Cette vérification est redondante si l'event listener est attaché correctement, mais c'est une bonne pratique de sécurité.
+                console.error("Utilisateur non authentifié. Impossible d'ajouter au panier.");
+                showMessage("Erreur: Impossible d'ajouter au panier. Veuillez rafraîchir la page.");
+                return;
+            }
             if (!selectedVariety || !selectedWeight) {
                 showMessage("Veuillez sélectionner une variété et un poids.");
                 return;
             }
-            if (!userId) {
-                console.error("Utilisateur non authentifié.");
-                showMessage("Erreur: Impossible d'ajouter au panier. Veuillez rafraîchir la page.");
-                return;
-            }
+            
             const variety = selectedVariety;
             const weight = selectedWeight;
             const productId = currentProduct.id;
             const price = currentProduct.prices[weight];
-            const quantity = 1; // La quantité est toujours 1
+            const quantity = 1;
             const itemId = `${productId}-${weight}-${variety}`;
 
             const cartItemRef = doc(db, cartPath, itemId);
@@ -990,7 +994,7 @@
                 });
             }
             showMessage("Produit ajouté au panier !");
-        });
+        }
 
         buyNowBtn.addEventListener('click', () => {
              if (!selectedVariety || !selectedWeight) {
