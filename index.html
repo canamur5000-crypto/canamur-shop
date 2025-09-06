@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CANAMUR</title>
+    <title>Boutique Canamur</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome pour les icônes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -15,21 +14,9 @@
             color: #ffffff;
         }
         .container-main {
-            padding-bottom: 8rem; /* Ajusté pour éviter le chevauchement avec la barre de navigation */
+            padding-bottom: 8rem;
             position: relative;
             z-index: 10;
-        }
-        .container-blur {
-            position: fixed;
-            top: 1rem;
-            bottom: 1rem;
-            left: 1rem;
-            right: 1rem;
-            border-radius: 2rem;
-            background-color: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(8px);
-            z-index: 5;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .hero-section {
             background-image: url('https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1757022565259.jpg');
@@ -200,7 +187,7 @@
         .product-page-content {
             position: relative;
             z-index: 10;
-            padding-bottom: 8rem; /* Ajout d'une marge pour les boutons */
+            padding-bottom: 8rem;
         }
 
         .action-button {
@@ -237,7 +224,7 @@
             overflow-y: auto;
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
-            padding-bottom: 6rem; /* Ajout de padding pour le contenu */
+            padding-bottom: 6rem;
         }
         .cart-page.open {
             transform: translateX(0);
@@ -268,7 +255,7 @@
         /* Styles de la page produit */
         .product-page-image-container {
             width: 100%;
-            height: 60vh; /* Utilise 60% de la hauteur de la vue pour une taille adaptée aux photos */
+            height: 60vh;
             overflow: hidden;
             position: relative;
             background-color: #2a2a47;
@@ -279,7 +266,7 @@
         .product-page-image-container video {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Assure que le contenu s'adapte sans être déformé */
+            object-fit: contain;
             object-position: center;
         }
 
@@ -317,7 +304,7 @@
         }
         
         .product-page-content {
-            padding-bottom: 8rem; /* Assure que les boutons ne sont pas cachés */
+            padding-bottom: 8rem;
         }
         
         .weight-button {
@@ -450,7 +437,6 @@
         </div>
     </div>
 
-
     <!-- Ligne de séparation avant la navigation -->
     <div class="separator"></div>
 
@@ -479,77 +465,8 @@
         </a>
     </nav>
 
-    <!-- Intégration de Firebase et Gemini API -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        
-        // IMPORTANT: Ces variables sont automatiquement injectées par l'environnement
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        let firebaseConfig = {
-            // Placeholder, sera écrasé par la configuration injectée
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        
-        // Si les variables de l'environnement sont disponibles, on les utilise pour la configuration Firebase
-        const injectedFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-        if (injectedFirebaseConfig) {
-            Object.assign(firebaseConfig, injectedFirebaseConfig);
-        }
-
-        // Configuration de l'application Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // Définition de l'utilisateur et du chemin du panier
-        let userId = null;
-        let cartPath = null;
-        let currentFilter = null;
-        let currentProduct = null;
-        let selectedVariety = null;
-        let selectedWeight = null;
-        let currentSlide = 0;
-        let startX = 0;
-        let endX = 0;
-        
-        setLogLevel('debug'); // Active les logs pour le débogage de Firestore
-
-        // Gestion de l'authentification et de l'état de l'utilisateur
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                cartPath = `artifacts/${appId}/users/${userId}/cart`;
-                console.log("Authentification réussie. User ID:", userId);
-                listenToCart(); // Commence à écouter le panier
-                // Ajout de l'événement click ici pour s'assurer que l'userId est prêt
-                addToCartBtn.addEventListener('click', handleAddToCart);
-            } else {
-                console.log("Utilisateur non authentifié. Connexion anonyme en cours...");
-                try {
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                        console.log("Connexion avec token personnalisé.");
-                    } else {
-                        await signInAnonymously(auth);
-                        console.log("Connexion anonyme réussie.");
-                    }
-                } catch (error) {
-                    console.error("Erreur d'authentification:", error);
-                }
-            }
-        });
-
-        // Modèle de données du produit
+    <!-- Scripts JavaScript -->
+    <script>
         const products = {
             'topMousse': {
                 id: 'topMousse',
@@ -565,8 +482,8 @@
                 category: 'hash',
                 varieties: ['Mousse'],
                 images: [
-                    'IMG_2639.jpeg',
-                    'IMG_2652.jpeg'
+                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/IMG_2639.jpeg',
+                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/IMG_2652.jpeg'
                 ],
             },
             'drysift': {
@@ -581,8 +498,8 @@
                 category: 'hash',
                 varieties: ['Strawnana'],
                 images: [
-                    'video-1756990332347-w7sallzb8-4449756892071785169(1).jpg',
-                    'video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
+                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/video-1756990332347-w7sallzb8-4449756892071785169(1).jpg',
+                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
                 ],
             },
             'caliUsLoose': {
@@ -598,17 +515,15 @@
                 category: 'weed',
                 varieties: ['Purple Runtz', 'Dipz'],
                 images: [
-                    'Screenshot_20250906_163418_Gallery.jpg',
+                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20250906_163418_Gallery.jpg',
                     'https://www.youtube.com/embed/j_8j4m_y3kY',
                     'https://www.youtube.com/embed/H0dC-G3kYpM'
                 ],
             }
         };
 
-        // État du panier
-        let cartItems = {};
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
 
-        // Fonctions d'interaction avec le DOM
         const mainApp = document.getElementById('main-app');
         const productPage = document.getElementById('product-page');
         const cartPage = document.getElementById('cart-page');
@@ -623,22 +538,29 @@
         const heroCarouselContainer = document.getElementById('hero-carousel-container');
         const heroCarouselTrack = document.getElementById('hero-carousel-track');
         const heroCarouselDots = document.getElementById('hero-carousel-dots');
+        
+        let currentFilter = null;
+        let currentProduct = null;
+        let selectedVariety = null;
+        let selectedWeight = null;
+        let currentSlide = 0;
+        let startX = 0;
+        let endX = 0;
 
         const heroImages = [
-            '1757022565259.jpg',
-            'Picsart_25-05-16_23-24-53-435.png'
+            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1757022565259.jpg',
+            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Picsart_25-05-16_23-24-53-435.png'
         ];
-
+        
         let heroSlideIndex = 0;
         let heroCarouselInterval;
 
         function updateHeroCarousel() {
             heroCarouselTrack.innerHTML = '';
             heroCarouselDots.innerHTML = '';
-
             heroImages.forEach((imgUrl, index) => {
                 const imgElement = document.createElement('img');
-                imgElement.src = `https://canamur5000-crypto.github.io/canamur-shop/${imgUrl}`;
+                imgElement.src = imgUrl;
                 imgElement.className = 'w-full h-full object-cover flex-shrink-0';
                 heroCarouselTrack.appendChild(imgElement);
 
@@ -646,7 +568,6 @@
                 dot.className = `w-2 h-2 rounded-full ${index === heroSlideIndex ? 'bg-white' : 'bg-gray-400'}`;
                 heroCarouselDots.appendChild(dot);
             });
-
             heroCarouselTrack.style.transform = `translateX(-${heroSlideIndex * 100}%)`;
         }
 
@@ -658,16 +579,27 @@
             }, 3000);
         }
 
-        // Initialisation de la grille des produits
+        function saveCart() {
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartCounter();
+        }
+
+        function updateCartCounter() {
+            let count = 0;
+            for (const itemId in cartItems) {
+                count += cartItems[itemId].quantity;
+            }
+            cartCounter.textContent = count;
+        }
+
         function initProductGrid() {
             productGrid.innerHTML = '';
-            // Par défaut, afficher tous les produits
             Object.values(products).forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card cursor-pointer';
                 card.onclick = () => showProduct(product.id);
                 const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
+                const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
                 
                 card.innerHTML = `
                     <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
@@ -680,19 +612,16 @@
             });
         }
 
-        // Gérer le filtre des produits
         window.toggleFilter = function(category) {
             const weedPill = document.getElementById('weed-pill');
             const hashPill = document.getElementById('hash-pill');
             
             if (currentFilter === category) {
-                // Désactiver le filtre
                 currentFilter = null;
                 weedPill.classList.remove('active');
                 hashPill.classList.remove('active');
                 initProductGrid();
             } else {
-                // Activer le filtre
                 currentFilter = category;
                 weedPill.classList.remove('active');
                 hashPill.classList.remove('active');
@@ -704,7 +633,7 @@
                     card.className = 'product-card cursor-pointer';
                     card.onclick = () => showProduct(product.id);
                     const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                    const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
+                    const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
                     card.innerHTML = `
                         <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
                         <div class="p-2">
@@ -717,15 +646,13 @@
             }
         };
 
-        // Initialisation de la grille des produits au chargement
         document.addEventListener('DOMContentLoaded', () => {
             initProductGrid();
             updateHeroCarousel();
             startHeroCarousel();
+            updateCartCounter();
         });
 
-        // Gestion du carrousel d'images
-        
         function updateCarousel() {
             const totalSlides = carouselTrack.children.length;
             if (totalSlides > 0) {
@@ -749,7 +676,6 @@
             }
         }
         
-        // Glissement tactile
         carouselTrack.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
         });
@@ -764,7 +690,6 @@
             }
         });
         
-        // Fonctions pour les messages et modales
         function showMessage(message) {
             const modal = document.getElementById('message-modal');
             const modalText = document.getElementById('modal-text');
@@ -777,7 +702,6 @@
             modal.classList.add('hidden');
         }
 
-        // Fonctions pour afficher et masquer les sections
         function showProduct(productId) {
             currentProduct = products[productId];
             if (!currentProduct) {
@@ -785,32 +709,28 @@
                 return;
             }
             
-            // Réinitialiser les sélections
             selectedVariety = null;
             selectedWeight = null;
             
             productName.textContent = currentProduct.name;
             productCategoryTitle.textContent = currentProduct.category.toUpperCase();
             
-            // Construire les images et vidéos du carrousel
             carouselTrack.innerHTML = '';
             currentProduct.images.forEach(media => {
                 const mediaElement = document.createElement('div');
                 mediaElement.className = 'carousel-item';
                 
-                // Vérifie si c'est une vidéo ou une image
                 if (media.includes('youtube.com')) {
                     mediaElement.innerHTML = `<iframe src="${media}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
                 } else if (media.includes('.mp4')) {
-                    mediaElement.innerHTML = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="https://canamur5000-crypto.github.io/canamur-shop/${media}" type="video/mp4"></video>`;
+                    mediaElement.innerHTML = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="${media}" type="video/mp4"></video>`;
                 } else {
-                    mediaElement.innerHTML = `<img src="https://canamur5000-crypto.github.io/canamur-shop/${media}" alt="${currentProduct.name}" class="w-full h-full">`;
+                    mediaElement.innerHTML = `<img src="${media}" alt="${currentProduct.name}" class="w-full h-full">`;
                 }
                 carouselTrack.appendChild(mediaElement);
             });
             updateCarousel();
 
-            // Construire les options de variété et de poids
             productOptions.innerHTML = `
                 <div class="mb-4">
                     <h3 class="text-xl font-bold mb-2">Variété</h3>
@@ -833,7 +753,6 @@
                 </div>
             `;
             
-            // Gérer les sélections de variété
             document.querySelectorAll('.variety-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.variety-btn').forEach(b => b.classList.remove('bg-gray-700'));
@@ -842,7 +761,6 @@
                 });
             });
 
-            // Pré-sélectionner la première variété et le premier poids si existants
             const firstVarietyBtn = document.querySelector('#variety-options .variety-btn');
             if (firstVarietyBtn) {
                 firstVarietyBtn.classList.add('bg-gray-700');
@@ -891,30 +809,6 @@
             mainApp.classList.remove('hidden');
         }
 
-        // Écoute des mises à jour du panier Firestore
-        function listenToCart() {
-            if (!cartPath) {
-                console.error("Le chemin du panier n'est pas défini.");
-                return;
-            }
-            const q = collection(db, cartPath);
-            onSnapshot(q, (snapshot) => {
-                // Clear the existing cartItems object before populating it
-                cartItems = {}; // Réinitialise l'objet du panier
-                let count = 0;
-                snapshot.forEach(doc => {
-                    cartItems[doc.id] = doc.data();
-                    count += doc.data().quantity;
-                });
-                cartCounter.textContent = count;
-                updateCartPage();
-                console.log("Panier mis à jour:", cartItems);
-            }, (error) => {
-                console.error("Erreur lors de l'écoute du panier:", error);
-            });
-        }
-
-        // Mise à jour de l'affichage du panier
         function updateCartPage() {
             const cartItemsContainer = document.getElementById('cart-items-page');
             cartItemsContainer.innerHTML = '';
@@ -923,7 +817,7 @@
 
             if (items.length === 0) {
                 cartItemsContainer.innerHTML = '<p class="text-center text-gray-400">Votre panier est vide.</p>';
-                document.getElementById('cart-total-page').textContent = `0€`; // Mettre à jour le total à 0 si le panier est vide
+                document.getElementById('cart-total-page').textContent = `0€`;
                 return;
             }
 
@@ -934,7 +828,7 @@
                 itemElement.className = 'cart-page-item';
                 const product = products[item.id.split('-')[0]];
                 const firstProductImage = product && Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
-                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') && !firstProductImage.includes('.mp4') ? `https://canamur5000-crypto.github.io/canamur-shop/${firstProductImage}` : 'https://placehold.co/600x600/1e293b/fff?text=Image';
+                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') && !firstProductImage.includes('.mp4') ? firstProductImage : 'https://placehold.co/600x600/1e293b/fff?text=Image';
 
                 itemElement.innerHTML = `
                     <div class="w-16 h-16 rounded-md overflow-hidden mr-4">
@@ -957,14 +851,7 @@
             document.getElementById('cart-total-page').textContent = `${total}€`;
         }
         
-        // Fonctions d'interaction avec le panier
-        async function handleAddToCart() {
-            if (!userId) {
-                // Cette vérification est redondante si l'event listener est attaché correctement, mais c'est une bonne pratique de sécurité.
-                console.error("Utilisateur non authentifié. Impossible d'ajouter au panier.");
-                showMessage("Erreur: Impossible d'ajouter au panier. Veuillez rafraîchir la page.");
-                return;
-            }
+        addToCartBtn.addEventListener('click', () => {
             if (!selectedVariety || !selectedWeight) {
                 showMessage("Veuillez sélectionner une variété et un poids.");
                 return;
@@ -977,24 +864,21 @@
             const quantity = 1;
             const itemId = `${productId}-${weight}-${variety}`;
 
-            const cartItemRef = doc(db, cartPath, itemId);
-            const cartDoc = await getDoc(cartItemRef);
-
-            if (cartDoc.exists()) {
-                const currentQuantity = cartDoc.data().quantity;
-                await updateDoc(cartItemRef, { quantity: currentQuantity + quantity });
+            if (cartItems[itemId]) {
+                cartItems[itemId].quantity += quantity;
             } else {
-                await setDoc(cartItemRef, {
+                cartItems[itemId] = {
                     id: itemId,
                     name: currentProduct.name,
                     variety: variety,
                     weight: weight,
                     price: price,
                     quantity: quantity
-                });
+                };
             }
+            saveCart();
             showMessage("Produit ajouté au panier !");
-        }
+        });
 
         buyNowBtn.addEventListener('click', () => {
              if (!selectedVariety || !selectedWeight) {
@@ -1015,25 +899,16 @@
             window.location.href = telegramUrl;
         });
 
-        window.removeFromCart = async (itemId) => {
-            if (!userId) {
-                console.error("Utilisateur non authentifié.");
-                return;
-            }
-            const cartItemRef = doc(db, cartPath, itemId);
-            await deleteDoc(cartItemRef);
+        window.removeFromCart = (itemId) => {
+            delete cartItems[itemId];
+            saveCart();
+            updateCartPage();
         };
         
-        window.clearCart = async () => {
-            if (!userId) {
-                console.error("Utilisateur non authentifié.");
-                return;
-            }
-            const items = Object.keys(cartItems);
-            for (const itemId of items) {
-                const cartItemRef = doc(db, cartPath, itemId);
-                await deleteDoc(cartItemRef);
-            }
+        window.clearCart = () => {
+            cartItems = {};
+            saveCart();
+            updateCartPage();
         };
 
         window.placeOrder = () => {
@@ -1053,11 +928,9 @@
 
             const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
             window.location.href = telegramUrl;
-            // Une fois la commande passée, il est recommandé de vider le panier.
-            Object.keys(cartItems).forEach(async (itemId) => {
-                const cartItemRef = doc(db, cartPath, itemId);
-                await deleteDoc(cartItemRef);
-            });
+            cartItems = {};
+            saveCart();
+            updateCartPage();
         };
 
         window.showProduct = showProduct;
