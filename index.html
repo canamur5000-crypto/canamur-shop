@@ -470,8 +470,8 @@
                 category: 'hash',
                 varieties: ['Mousse'],
                 images: [
-                    'https://canamur5000-crypto.github.io/canamur-shop/IMG_2639.jpeg',
-                    'https://canamur5000-crypto.github.io/canamur-shop/IMG_2652.jpeg'
+                    'IMG_2639.jpeg',
+                    'IMG_2652.jpeg'
                 ],
             },
             'drysift': {
@@ -485,7 +485,10 @@
                 },
                 category: 'hash',
                 varieties: ['Strawnana'],
-                images: ['https://canamur5000-crypto.github.io/canamur-shop/video-1756990332347-w7sallzb8-4449756892071785169(1).jpg', 'https://canamur5000-crypto.github.io/canamur-shop/video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'],
+                images: [
+                    'video-1756990332347-w7sallzb8-4449756892071785169(1).jpg',
+                    'video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
+                ],
             },
             'caliUsLoose': {
                 id: 'caliUsLoose',
@@ -500,7 +503,7 @@
                 category: 'weed',
                 varieties: ['Purple Runtz', 'Dipz'],
                 images: [
-                    'https://canamur5000-crypto.github.io/canamur-shop/Screenshot_20250906_163418_Gallery.jpg',
+                    'Screenshot_20250906_163418_Gallery.jpg',
                     'https://www.youtube.com/embed/j_8j4m_y3kY',
                     'https://www.youtube.com/embed/H0dC-G3kYpM'
                 ],
@@ -527,8 +530,8 @@
         const heroCarouselDots = document.getElementById('hero-carousel-dots');
         
         const heroImages = [
-            'https://canamur5000-crypto.github.io/canamur-shop/1757022565259.jpg',
-            'https://canamur5000-crypto.github.io/canamur-shop/Picsart_25-05-16_23-24-53-435.png'
+            '1757022565259.jpg',
+            'Picsart_25-05-16_23-24-53-435.png'
         ];
 
         let heroSlideIndex = 0;
@@ -544,7 +547,7 @@
 
             heroImages.forEach((imgUrl, index) => {
                 const imgElement = document.createElement('img');
-                imgElement.src = imgUrl;
+                imgElement.src = `https://canamur5000-crypto.github.io/canamur-shop/${imgUrl}`;
                 imgElement.className = 'w-full h-full object-cover flex-shrink-0';
                 heroCarouselTrack.appendChild(imgElement);
 
@@ -573,8 +576,10 @@
                 card.className = 'product-card cursor-pointer';
                 card.onclick = () => showProduct(product.id);
                 const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
+                const imageUrl = firstImage.includes('youtube.com') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
+                
                 card.innerHTML = `
-                    <img src="${firstImage.includes('youtube.com') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
+                    <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
                     <div class="p-2">
                         <h3 class="font-bold text-sm">${product.name}</h3>
                         <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
@@ -608,8 +613,9 @@
                     card.className = 'product-card cursor-pointer';
                     card.onclick = () => showProduct(product.id);
                     const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
+                    const imageUrl = firstImage.includes('youtube.com') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
                     card.innerHTML = `
-                        <img src="${firstImage.includes('youtube.com') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
+                        <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
                         <div class="p-2">
                             <h3 class="font-bold text-sm">${product.name}</h3>
                             <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
@@ -689,7 +695,7 @@
                     const videoUrl = media.includes('youtube.com') ? media : `https://canamur5000-crypto.github.io/canamur-shop/${media}`;
                     mediaElement.innerHTML = `<iframe src="${videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
                 } else {
-                    const imageUrl = `https://canamur5000-crypto.github.io/canamur-shop/${media.split('/').pop()}`;
+                    const imageUrl = `https://canamur5000-crypto.github.io/canamur-shop/${media}`;
                     mediaElement.innerHTML = `<img src="${imageUrl}" alt="${currentProduct.name}" class="w-full h-full">`;
                 }
                 carouselTrack.appendChild(mediaElement);
@@ -810,7 +816,7 @@
                 itemElement.className = 'cart-page-item';
                 const product = products[item.id.split('-')[0]];
                 const firstProductImage = product && Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
-                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') ? `https://canamur5000-crypto.github.io/canamur-shop/${firstProductImage.split('/').pop()}` : 'https://placehold.co/600x600/1e293b/fff?text=Image';
+                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') ? `https://canamur5000-crypto.github.io/canamur-shop/${firstProductImage}` : 'https://placehold.co/600x600/1e293b/fff?text=Image';
 
                 itemElement.innerHTML = `
                     <div class="w-16 h-16 rounded-md overflow-hidden mr-4">
