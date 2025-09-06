@@ -103,7 +103,7 @@
             align-items: center;
             position: relative;
         }
-        .carousel-item img, .carousel-item iframe {
+        .carousel-item img, .carousel-item iframe, .carousel-item video {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -273,7 +273,8 @@
         }
 
         .product-page-image-container img,
-        .product-page-image-container iframe {
+        .product-page-image-container iframe,
+        .product-page-image-container video {
             width: 100%;
             height: 100%;
             object-fit: contain; /* Assure que le contenu s'adapte sans être déformé */
@@ -418,8 +419,21 @@
 
         // IMPORTANT: Ces variables sont automatiquement injectées par l'environnement
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const firebaseConfig = {
+          apiKey: "YOUR_API_KEY",
+          authDomain: "YOUR_AUTH_DOMAIN",
+          projectId: "YOUR_PROJECT_ID",
+          storageBucket: "YOUR_STORAGE_BUCKET",
+          messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+          appId: "YOUR_APP_ID"
+        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Si les variables de l'environnement sont disponibles, on les utilise pour la configuration Firebase
+        const injectedFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        if (injectedFirebaseConfig) {
+            Object.assign(firebaseConfig, injectedFirebaseConfig);
+        }
 
         // Configuration de l'application Firebase
         const app = initializeApp(firebaseConfig);
@@ -576,7 +590,7 @@
                 card.className = 'product-card cursor-pointer';
                 card.onclick = () => showProduct(product.id);
                 const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                const imageUrl = firstImage.includes('youtube.com') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
+                const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
                 
                 card.innerHTML = `
                     <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
@@ -613,7 +627,7 @@
                     card.className = 'product-card cursor-pointer';
                     card.onclick = () => showProduct(product.id);
                     const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                    const imageUrl = firstImage.includes('youtube.com') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
+                    const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : `https://canamur5000-crypto.github.io/canamur-shop/${firstImage}`;
                     card.innerHTML = `
                         <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
                         <div class="p-2">
@@ -691,12 +705,12 @@
                 mediaElement.className = 'carousel-item';
                 
                 // Vérifie si c'est une vidéo ou une image
-                if (media.includes('youtube.com') || media.includes('.mp4')) {
-                    const videoUrl = media.includes('youtube.com') ? media : `https://canamur5000-crypto.github.io/canamur-shop/${media}`;
-                    mediaElement.innerHTML = `<iframe src="${videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
+                if (media.includes('youtube.com')) {
+                    mediaElement.innerHTML = `<iframe src="${media}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
+                } else if (media.includes('.mp4')) {
+                    mediaElement.innerHTML = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="https://canamur5000-crypto.github.io/canamur-shop/${media}" type="video/mp4"></video>`;
                 } else {
-                    const imageUrl = `https://canamur5000-crypto.github.io/canamur-shop/${media}`;
-                    mediaElement.innerHTML = `<img src="${imageUrl}" alt="${currentProduct.name}" class="w-full h-full">`;
+                    mediaElement.innerHTML = `<img src="https://canamur5000-crypto.github.io/canamur-shop/${media}" alt="${currentProduct.name}" class="w-full h-full">`;
                 }
                 carouselTrack.appendChild(mediaElement);
             });
@@ -816,7 +830,7 @@
                 itemElement.className = 'cart-page-item';
                 const product = products[item.id.split('-')[0]];
                 const firstProductImage = product && Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
-                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') ? `https://canamur5000-crypto.github.io/canamur-shop/${firstProductImage}` : 'https://placehold.co/600x600/1e293b/fff?text=Image';
+                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') && !firstProductImage.includes('.mp4') ? `https://canamur5000-crypto.github.io/canamur-shop/${firstProductImage}` : 'https://placehold.co/600x600/1e293b/fff?text=Image';
 
                 itemElement.innerHTML = `
                     <div class="w-16 h-16 rounded-md overflow-hidden mr-4">
