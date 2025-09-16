@@ -501,24 +501,6 @@
                     'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/video-1756990332347-w7sallzb8-4449756892071785169(1).jpg',
                     'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
                 ],
-            },
-            'caliUsLoose': {
-                id: 'caliUsLoose',
-                name: 'Cali us Loose',
-                prices: {
-                    '3.5g': 45,
-                    '5g': 60,
-                    '7g': 80,
-                    '14g': 140,
-                    '25g': 225
-                },
-                category: 'weed',
-                varieties: ['Purple Runtz', 'Dipz'],
-                images: [
-                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20250906_163418_Gallery.jpg',
-                    'https://www.youtube.com/embed/j_8j4m_y3kY',
-                    'https://www.youtube.com/embed/H0dC-G3kYpM'
-                ],
             }
         };
 
@@ -594,22 +576,27 @@
 
         function initProductGrid() {
             productGrid.innerHTML = '';
-            Object.values(products).forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card cursor-pointer';
-                card.onclick = () => showProduct(product.id);
-                const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
-                
-                card.innerHTML = `
-                    <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
-                    <div class="p-2">
-                        <h3 class="font-bold text-sm">${product.name}</h3>
-                        <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
-                    </div>
-                `;
-                productGrid.appendChild(card);
-            });
+            const filteredProducts = Object.values(products);
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = '<p class="text-center text-gray-400 col-span-2">Restock en cours...</p>';
+            } else {
+                filteredProducts.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card cursor-pointer';
+                    card.onclick = () => showProduct(product.id);
+                    const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
+                    const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
+                    
+                    card.innerHTML = `
+                        <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
+                        <div class="p-2">
+                            <h3 class="font-bold text-sm">${product.name}</h3>
+                            <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
+                        </div>
+                    `;
+                    productGrid.appendChild(card);
+                });
+            }
         }
 
         window.toggleFilter = function(category) {
@@ -628,21 +615,26 @@
                 document.getElementById(`${category}-pill`).classList.add('active');
                 
                 productGrid.innerHTML = '';
-                Object.values(products).filter(p => p.category === category).forEach(product => {
-                     const card = document.createElement('div');
-                    card.className = 'product-card cursor-pointer';
-                    card.onclick = () => showProduct(product.id);
-                    const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                    const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
-                    card.innerHTML = `
-                        <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
-                        <div class="p-2">
-                            <h3 class="font-bold text-sm">${product.name}</h3>
-                            <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
-                        </div>
-                    `;
-                    productGrid.appendChild(card);
-                });
+                const filteredProducts = Object.values(products).filter(p => p.category === category);
+                if (filteredProducts.length === 0) {
+                    productGrid.innerHTML = '<p class="text-center text-gray-400 col-span-2">Restock en cours...</p>';
+                } else {
+                    filteredProducts.forEach(product => {
+                        const card = document.createElement('div');
+                        card.className = 'product-card cursor-pointer';
+                        card.onclick = () => showProduct(product.id);
+                        const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
+                        const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
+                        card.innerHTML = `
+                            <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
+                            <div class="p-2">
+                                <h3 class="font-bold text-sm">${product.name}</h3>
+                                <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
+                            </div>
+                        `;
+                        productGrid.appendChild(card);
+                    });
+                }
             }
         };
 
