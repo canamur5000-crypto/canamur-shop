@@ -90,10 +90,11 @@
             align-items: center;
             position: relative;
         }
+        /* Assure que la vidéo ou l'image remplisse l'espace sans être déformée */
         .carousel-item img, .carousel-item iframe, .carousel-item video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             border-radius: 12px;
         }
         .carousel-button {
@@ -266,8 +267,12 @@
         .product-page-image-container video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             object-position: center;
+        }
+        /* S'assurer que les vidéos n'ont pas de marges ou de padding inutiles */
+        .carousel-item video {
+            display: block;
         }
 
         .modal-overlay {
@@ -378,7 +383,7 @@
             </header>
             <div class="product-page-image-container rounded-xl shadow-lg mb-4">
                 <div id="carousel-track" class="carousel-slide">
-                    <!-- Les images du carrousel seront injectées ici -->
+                    <!-- Les images/videos de toutes les variétés seront injectées ici -->
                 </div>
                 <button class="carousel-button left" onclick="window.prevSlide()">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -467,6 +472,19 @@
 
     <!-- Scripts JavaScript -->
     <script>
+        const BASE_URL = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/';
+
+        // Image de présentation générique pour Cali US Loose (affichée en premier)
+        const CALI_LOOSE_PRESENTATION_IMAGE = BASE_URL + 'preview.png';
+
+        // Mappage des vidéos aux variétés de Cali US Loose
+        const CALI_LOOSE_MEDIA_MAP = {
+            'White Runtz': [BASE_URL + 'nwhite%20runtz.mp4'],
+            'Diamond Mac': [BASE_URL + 'mac%20diamond.mp4'],
+            'Sunshet Sherbet': [BASE_URL + 'sunshet%20sherbet%20.mp4'],
+            'Weeding Crasher': [BASE_URL + 'Weeding%20.mp4'],
+        };
+        
         const products = {
             'topMousse': {
                 id: 'topMousse',
@@ -482,8 +500,8 @@
                 category: 'hash',
                 varieties: ['Mousse'],
                 images: [
-                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/IMG_2639.jpeg',
-                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/IMG_2652.jpeg'
+                    BASE_URL + 'IMG_2639.jpeg',
+                    BASE_URL + 'IMG_2652.jpeg'
                 ],
             },
             'drysift': {
@@ -498,9 +516,23 @@
                 category: 'hash',
                 varieties: ['Strawnana'],
                 images: [
-                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/video-1756990332347-w7sallzb8-4449756892071785169(1).jpg',
-                    'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
+                    BASE_URL + 'video-1756990332347-w7sallzb8-4449756892071785169(1).jpg',
+                    BASE_URL + 'video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
                 ],
+            },
+            'caliLoose': {
+                id: 'caliLoose',
+                name: 'Cali US Loose',
+                prices: {
+                    '3.5g': 45,
+                    '5g': 60,
+                    '10g': 110,
+                    '12.5g': 130,
+                    '25g': 225
+                },
+                category: 'weed',
+                varieties: ['White Runtz', 'Diamond Mac', 'Sunshet Sherbet', 'Weeding Crasher'],
+                images: [CALI_LOOSE_PRESENTATION_IMAGE], 
             }
         };
 
@@ -517,21 +549,25 @@
         const addToCartBtn = document.getElementById('add-to-cart-btn');
         const productGrid = document.getElementById('product-grid');
         const productCategoryTitle = document.getElementById('product-category');
-        const heroCarouselContainer = document.getElementById('hero-carousel-container');
         const heroCarouselTrack = document.getElementById('hero-carousel-track');
         const heroCarouselDots = document.getElementById('hero-carousel-dots');
         
         let currentFilter = null;
         let currentProduct = null;
-        let selectedVariety = null;
+        let selectedVariety = null; 
         let selectedWeight = null;
         let currentSlide = 0;
         let startX = 0;
         let endX = 0;
 
+        // Liste contenant tous les médias chargés pour le produit actuel, avec leur variété associée
+        let currentProductMediaList = []; 
+
+        // NOUVELLE LISTE COMPLÈTE DU CARROUSEL D'ACCUEIL
         const heroImages = [
-            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1757022565259.jpg',
-            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Picsart_25-05-16_23-24-53-435.png'
+            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1757022565259.jpg', // Ajout de la première image
+            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1758993410955.jpg',
+            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1758993497780.jpg'
         ];
         
         let heroSlideIndex = 0;
@@ -576,16 +612,21 @@
 
         function initProductGrid() {
             productGrid.innerHTML = '';
-            const filteredProducts = Object.values(products);
-            if (filteredProducts.length === 0) {
+            const allProducts = Object.values(products);
+            const displayedProducts = currentFilter ? allProducts.filter(p => p.category === currentFilter) : allProducts;
+
+            if (displayedProducts.length === 0) {
                 productGrid.innerHTML = '<p class="text-center text-gray-400 col-span-2">Restock en cours...</p>';
             } else {
-                filteredProducts.forEach(product => {
+                displayedProducts.forEach(product => {
                     const card = document.createElement('div');
                     card.className = 'product-card cursor-pointer';
                     card.onclick = () => showProduct(product.id);
-                    const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                    const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
+                    
+                    let imageUrl = 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
+                    if (Array.isArray(product.images) && product.images.length > 0) {
+                        imageUrl = product.images[0];
+                    }
                     
                     card.innerHTML = `
                         <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
@@ -607,35 +648,13 @@
                 currentFilter = null;
                 weedPill.classList.remove('active');
                 hashPill.classList.remove('active');
-                initProductGrid();
             } else {
                 currentFilter = category;
                 weedPill.classList.remove('active');
                 hashPill.classList.remove('active');
                 document.getElementById(`${category}-pill`).classList.add('active');
-                
-                productGrid.innerHTML = '';
-                const filteredProducts = Object.values(products).filter(p => p.category === category);
-                if (filteredProducts.length === 0) {
-                    productGrid.innerHTML = '<p class="text-center text-gray-400 col-span-2">Restock en cours...</p>';
-                } else {
-                    filteredProducts.forEach(product => {
-                        const card = document.createElement('div');
-                        card.className = 'product-card cursor-pointer';
-                        card.onclick = () => showProduct(product.id);
-                        const firstImage = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                        const imageUrl = firstImage.includes('youtube.com') || firstImage.includes('.mp4') ? 'https://placehold.co/600x600/1e293b/fff?text=Vidéo' : firstImage;
-                        card.innerHTML = `
-                            <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
-                            <div class="p-2">
-                                <h3 class="font-bold text-sm">${product.name}</h3>
-                                <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
-                            </div>
-                        `;
-                        productGrid.appendChild(card);
-                    });
-                }
             }
+            initProductGrid();
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -645,10 +664,43 @@
             updateCartCounter();
         });
 
+        function pauseAllVideos() {
+            carouselTrack.querySelectorAll('video').forEach(video => {
+                if (!video.paused) {
+                    video.pause();
+                }
+            });
+        }
+
+        function playCurrentVideo() {
+            const currentItem = carouselTrack.children[currentSlide];
+            if (currentItem) {
+                const video = currentItem.querySelector('video');
+                if (video) {
+                    video.currentTime = 0; // Rembobiner la vidéo
+                    video.play().catch(e => console.log('Autoplay blocked:', e));
+                }
+            }
+        }
+
         function updateCarousel() {
             const totalSlides = carouselTrack.children.length;
             if (totalSlides > 0) {
                 carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Pause all videos except the current one
+                pauseAllVideos();
+                playCurrentVideo();
+
+                // NOUVEAU: Mettre à jour la variété sélectionnée en fonction du slide actuel
+                const currentSlideElement = carouselTrack.children[currentSlide];
+                if (currentSlideElement) {
+                    const slideVariety = currentSlideElement.getAttribute('data-variety');
+                    if (slideVariety && slideVariety !== selectedVariety) {
+                        // Mettre à jour la variété sélectionnée et l'interface utilisateur
+                        window.selectVariety(slideVariety);
+                    }
+                }
             }
         }
 
@@ -670,6 +722,7 @@
         
         carouselTrack.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            pauseAllVideos();
         });
         
         carouselTrack.addEventListener('touchend', (e) => {
@@ -679,6 +732,8 @@
                 window.prevSlide();
             } else if (diffX < -50) {
                 window.nextSlide();
+            } else {
+                playCurrentVideo();
             }
         });
         
@@ -694,6 +749,113 @@
             modal.classList.add('hidden');
         }
 
+        /**
+         * Construit le carrousel avec tous les médias (vidéos + images) pour toutes les variétés.
+         * @param {Object} product - Le produit actuel.
+         * @param {string} varietyToHighlight - La variété par défaut à sélectionner.
+         */
+        function updateProductCarousel(product, varietyToHighlight) {
+            carouselTrack.innerHTML = '';
+            currentProductMediaList = []; // Réinitialiser la liste complète des médias
+            currentSlide = 0; // Réinitialiser l'index
+
+            let allMedia = [];
+            let firstVarietySlideIndex = -1; 
+            
+            // Logique pour Cali US Loose (le produit avec plusieurs variétés de vidéos)
+            if (product.id === 'caliLoose') {
+                
+                // 1. Ajouter l'image de présentation en premier
+                allMedia.push({ url: CALI_LOOSE_PRESENTATION_IMAGE, variety: product.varieties[0], isImage: true });
+
+                // 2. Ajouter toutes les vidéos de toutes les variétés
+                product.varieties.forEach(vName => {
+                    const mediaUrls = CALI_LOOSE_MEDIA_MAP[vName] || [];
+                    mediaUrls.forEach(url => {
+                        allMedia.push({ url: url, variety: vName, isVideo: true });
+                    });
+                });
+            } else {
+                // Logique pour les autres produits (une seule variété/liste d'images)
+                const defaultVariety = product.varieties[0];
+                product.images.forEach(url => {
+                    allMedia.push({ url: url, variety: defaultVariety });
+                });
+            }
+
+            currentProductMediaList = allMedia;
+            
+            // 3. Construire les slides et trouver l'index de départ
+            allMedia.forEach((mediaItem, index) => {
+                const media = mediaItem.url;
+                const variety = mediaItem.variety;
+
+                const mediaElement = document.createElement('div');
+                mediaElement.className = 'carousel-item';
+                // Attacher la variété à l'élément de slide
+                mediaElement.setAttribute('data-variety', variety); 
+                
+                let content;
+                if (media.includes('youtube.com')) {
+                    content = `<iframe src="${media}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
+                } else if (media.includes('.mp4') || mediaItem.isVideo) {
+                    content = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="${media}" type="video/mp4"></video>`;
+                } else {
+                    content = `<img src="${media}" alt="${product.name}" class="w-full h-full">`;
+                }
+                mediaElement.innerHTML = content;
+                carouselTrack.appendChild(mediaElement);
+
+                // Définir l'index de départ sur le premier média de la variété sélectionnée
+                if (firstVarietySlideIndex === -1 && variety === varietyToHighlight) {
+                    firstVarietySlideIndex = index;
+                }
+            });
+
+            // 4. Définir le slide de départ
+            currentSlide = firstVarietySlideIndex !== -1 ? firstVarietySlideIndex : 0;
+            
+            // 5. Mettre à jour le carrousel (gère le transform et l'autoplay de la vidéo de départ)
+            updateCarousel();
+        }
+
+
+        window.selectVariety = function(variety, event) {
+            // 1. Mettre à jour l'état visuel des boutons
+            document.querySelectorAll('.variety-btn').forEach(b => b.classList.remove('bg-gray-700'));
+            
+            if (variety) {
+                if (event) {
+                    event.currentTarget.classList.add('bg-gray-700');
+                } else {
+                     // Si appelé par updateCarousel, trouver et activer le bouton
+                     const targetBtn = document.querySelector(`[data-value="${variety}"]`);
+                     if(targetBtn) { targetBtn.classList.add('bg-gray-700'); }
+                }
+                selectedVariety = variety;
+            }
+            
+            // 2. Si un événement de clic est présent, faire sauter le carrousel au premier média de cette variété
+            if (event) {
+                const totalSlides = carouselTrack.children.length;
+                let targetIndex = -1;
+                
+                // Trouver le premier slide qui correspond à la variété sélectionnée
+                for (let i = 0; i < totalSlides; i++) {
+                    if (carouselTrack.children[i].getAttribute('data-variety') === selectedVariety) {
+                        targetIndex = i;
+                        break;
+                    }
+                }
+                
+                if (targetIndex !== -1 && targetIndex !== currentSlide) {
+                    currentSlide = targetIndex;
+                    updateCarousel(); // Met à jour l'affichage
+                }
+            }
+        };
+
+
         function showProduct(productId) {
             currentProduct = products[productId];
             if (!currentProduct) {
@@ -701,34 +863,19 @@
                 return;
             }
             
-            selectedVariety = null;
-            selectedWeight = null;
-            
             productName.textContent = currentProduct.name;
             productCategoryTitle.textContent = currentProduct.category.toUpperCase();
             
-            carouselTrack.innerHTML = '';
-            currentProduct.images.forEach(media => {
-                const mediaElement = document.createElement('div');
-                mediaElement.className = 'carousel-item';
-                
-                if (media.includes('youtube.com')) {
-                    mediaElement.innerHTML = `<iframe src="${media}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
-                } else if (media.includes('.mp4')) {
-                    mediaElement.innerHTML = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="${media}" type="video/mp4"></video>`;
-                } else {
-                    mediaElement.innerHTML = `<img src="${media}" alt="${currentProduct.name}" class="w-full h-full">`;
-                }
-                carouselTrack.appendChild(mediaElement);
-            });
-            updateCarousel();
+            // Sélectionner la première variété par défaut
+            selectedVariety = currentProduct.varieties.length > 0 ? currentProduct.varieties[0] : null;
 
+            // Afficher les options
             productOptions.innerHTML = `
                 <div class="mb-4">
                     <h3 class="text-xl font-bold mb-2">Variété</h3>
                     <div class="flex flex-wrap gap-2" id="variety-options">
                         ${currentProduct.varieties.map((v, i) => `
-                            <button data-value="${v}" class="px-3 py-1 rounded-full border border-gray-600 hover:bg-gray-700 transition-colors text-xs variety-btn">${v}</button>
+                            <button data-value="${v}" class="px-3 py-1 rounded-full border border-gray-600 hover:bg-gray-700 transition-colors text-xs variety-btn" onclick="selectVariety('${v}', event)">${v}</button>
                         `).join('')}
                     </div>
                 </div>
@@ -745,27 +892,25 @@
                 </div>
             `;
             
-            document.querySelectorAll('.variety-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.variety-btn').forEach(b => b.classList.remove('bg-gray-700'));
-                    btn.classList.add('bg-gray-700');
-                    selectedVariety = btn.dataset.value;
-                });
-            });
-
-            const firstVarietyBtn = document.querySelector('#variety-options .variety-btn');
-            if (firstVarietyBtn) {
-                firstVarietyBtn.classList.add('bg-gray-700');
-                selectedVariety = firstVarietyBtn.dataset.value;
+            // Activer le bouton de la variété par défaut
+            if (selectedVariety) {
+                window.selectVariety(selectedVariety);
             }
+
+            // Activer le premier poids par défaut
             const firstWeightBtn = document.querySelector('#weight-options .weight-button');
             if (firstWeightBtn) {
                 firstWeightBtn.classList.add('active');
                 selectedWeight = firstWeightBtn.dataset.weight;
             }
+            
+            // Remplir le carrousel avec TOUTES les vidéos/images des variétés
+            updateProductCarousel(currentProduct, selectedVariety); 
 
             mainApp.classList.add('hidden');
             productPage.classList.remove('hidden');
+            
+            window.scrollTo(0, 0); 
         }
 
         window.selectWeight = function(weight) {
@@ -776,6 +921,7 @@
 
         window.showHome = function() {
             closeCartPage();
+            pauseAllVideos();
             productPage.classList.add('hidden');
             mainApp.classList.remove('hidden');
             currentFilter = null;
@@ -785,11 +931,13 @@
         }
 
         window.hideProduct = function() {
+            pauseAllVideos();
             productPage.classList.add('hidden');
             mainApp.classList.remove('hidden');
         }
 
         window.openCartPage = function() {
+            pauseAllVideos();
             cartPage.classList.add('open');
             mainApp.classList.add('hidden');
             productPage.classList.add('hidden');
@@ -819,8 +967,22 @@
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-page-item';
                 const product = products[item.id.split('-')[0]];
-                const firstProductImage = product && Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null;
-                const imageUrl = firstProductImage && !firstProductImage.includes('youtube.com') && !firstProductImage.includes('.mp4') ? firstProductImage : 'https://placehold.co/600x600/1e293b/fff?text=Image';
+                
+                let imageUrl = 'https://placehold.co/600x600/1e293b/fff?text=Image';
+                if (product) {
+                    if (product.id === 'caliLoose') {
+                        // Utiliser l'image de présentation pour la vignette du panier
+                        imageUrl = CALI_LOOSE_PRESENTATION_IMAGE;
+                    } else {
+                        // Utiliser le premier média non-vidéo comme vignette
+                        const firstImage = product.images.find(m => !m.includes('.mp4') && !m.includes('youtube.com')); 
+                        if (firstImage) {
+                            imageUrl = firstImage;
+                        } else if (product.images.length > 0) {
+                             imageUrl = product.images[0];
+                        }
+                    }
+                }
 
                 itemElement.innerHTML = `
                     <div class="w-16 h-16 rounded-md overflow-hidden mr-4">
@@ -869,7 +1031,7 @@
                 };
             }
             saveCart();
-            showMessage("Produit ajouté au panier !");
+            showMessage(`"${variety} (${weight})" ajouté au panier !`);
         });
 
         buyNowBtn.addEventListener('click', () => {
@@ -877,6 +1039,7 @@
                 showMessage("Veuillez sélectionner une variété et un poids.");
                 return;
             }
+            
             const variety = selectedVariety;
             const weight = selectedWeight;
             const price = currentProduct.prices[weight];
