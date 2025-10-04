@@ -486,24 +486,8 @@
         };
         
         const products = {
-            'topMousse': {
-                id: 'topMousse',
-                name: 'Top Mousse by Districtz Farm',
-                prices: {
-                    '3.5g': 35,
-                    '5g': 45,
-                    '10g': 80,
-                    '12.5g': 95,
-                    '25g': 175,
-                    '50g': 325
-                },
-                category: 'hash',
-                varieties: ['Mousse'],
-                images: [
-                    BASE_URL + 'IMG_2639.jpeg',
-                    BASE_URL + 'IMG_2652.jpeg'
-                ],
-            },
+            /*
+            * Le produit 'drysift' a été supprimé comme demandé
             'drysift': {
                 id: 'drysift',
                 name: 'Olivette Drysift by La Clickas Farm',
@@ -520,6 +504,7 @@
                     BASE_URL + 'video-1756990332347-w7sallzb8-4449756892071785169(2).jpg'
                 ],
             },
+            */
             'caliLoose': {
                 id: 'caliLoose',
                 name: 'Cali US Loose',
@@ -613,6 +598,7 @@
         function initProductGrid() {
             productGrid.innerHTML = '';
             const allProducts = Object.values(products);
+            // Si le filtre est 'hash', mais qu'il n'y a plus de produits hash, on ne filtre pas et on affiche 'Restock'
             const displayedProducts = currentFilter ? allProducts.filter(p => p.category === currentFilter) : allProducts;
 
             if (displayedProducts.length === 0) {
@@ -628,11 +614,17 @@
                         imageUrl = product.images[0];
                     }
                     
+                    let extraInfo = '';
+                    if (product.id === 'caliLoose' && product.varieties && product.varieties.length > 1) {
+                        extraInfo = `<p class="text-xs font-bold mt-1 text-purple-300">${product.varieties.length} VARIÉTÉS</p>`;
+                    }
+
                     card.innerHTML = `
                         <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
                         <div class="p-2">
                             <h3 class="font-bold text-sm">${product.name}</h3>
                             <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
+                            ${extraInfo}
                         </div>
                     `;
                     productGrid.appendChild(card);
