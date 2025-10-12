@@ -434,6 +434,7 @@
                 
                 <div id="product-options" class="mb-6">
                     <!-- Les options de variété et de poids seront injectées ici -->
+                    <!-- J'ai mis à jour le conteneur ici pour mieux séparer les groupes d'options -->
                 </div>
 
                 <div class="flex flex-col space-y-4">
@@ -508,13 +509,21 @@
 
         // Image de présentation générique pour Cali US Loose (affichée en premier)
         const CALI_LOOSE_PRESENTATION_IMAGE = BASE_URL + 'preview.png';
+        
+        // --- MÉDIAS FROZEN SIFT (Utilisation des URL Raw de GitHub) ---
+        // 1. Image principale pour la carte produit
+        const FROZEN_SIFT_CARD_IMAGE = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg'; 
+        // 2. Vidéo pour le carrousel
+        const FROZEN_SIFT_VIDEO = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/vluggejapieterpz-20251012-0001.mp4';
+        // ----------------------------------------------------------------------
+
 
         // Mappage des vidéos aux variétés de Cali US Loose
         const CALI_LOOSE_MEDIA_MAP = {
             'White Runtz': [BASE_URL + 'nwhite%20runtz.mp4'],
-            'Diamond Mac': [BASE_URL + 'mac%20diamond.mp4'],
-            'Sunshet Sherbet': [BASE_URL + 'sunshet%20sherbet%20.mp4'],
             'Weeding Crasher': [BASE_URL + 'Weeding%20.mp4'],
+            // AJOUT DE LA NOUVELLE VARIÉTÉ
+            'Lemon Cherry Runtz': ['https://placehold.co/600x600/1a1a2e/ffffff?text=Video+Lemon+Cherry']
         };
         
         const products = {
@@ -529,8 +538,31 @@
                     '25g': 225
                 },
                 category: 'weed',
-                varieties: ['White Runtz', 'Diamond Mac', 'Sunshet Sherbet', 'Weeding Crasher'],
+                // AJOUT DE LA NOUVELLE VARIÉTÉ
+                varieties: ['White Runtz', 'Weeding Crasher', 'Lemon Cherry Runtz'],
                 images: [CALI_LOOSE_PRESENTATION_IMAGE], 
+            },
+            'frozenSift': { // NOUVEAU PRODUIT AJOUTÉ
+                id: 'frozenSift',
+                name: 'Frozen Sift Streetfarmz',
+                prices: {
+                    '3.5g': 60,
+                    '5g': 85,
+                    '10g': 150,
+                    '12.5g': 175,
+                    '25g': 320
+                },
+                category: 'hash',
+                varieties: ['Trap Grape', 'Trop Cherry X Gazmint', 'Weeding Cake'],
+                // MISE À JOUR : Utilisation de l'image GitHub pour la carte produit
+                images: [FROZEN_SIFT_CARD_IMAGE], 
+                extraInfo: "NEW SEASON", // Information additionnelle pour l'affichage
+                // NOUVEAU: Mappage de la vidéo GitHub à toutes les variétés de Frozen Sift
+                mediaMap: {
+                    'Trap Grape': [FROZEN_SIFT_VIDEO],
+                    'Trop Cherry X Gazmint': [FROZEN_SIFT_VIDEO],
+                    'Weeding Cake': [FROZEN_SIFT_VIDEO]
+                }
             }
         };
 
@@ -644,8 +676,23 @@
                     }
                     
                     let extraInfo = '';
+                    // Affichage des variétés pour CaliLoose
                     if (product.id === 'caliLoose' && product.varieties && product.varieties.length > 1) {
-                        extraInfo = `<p class="text-xs font-bold mt-1 text-purple-300">${product.varieties.length} VARIÉTÉS</p>`;
+                        // APPLICATION DU STYLE BULLE sur la phrase "3 TOP VARIÉTÉS"
+                        extraInfo += `<p class="text-xs font-bold mt-1">
+                                            <span class="bg-purple-900/50 px-2 py-0.5 rounded-full inline-block text-purple-300">
+                                                3 TOP VARIÉTÉS
+                                            </span>
+                                        </p>`;
+                    }
+                    // Affichage de l'information supplémentaire (ex: NEW SEASON)
+                    if (product.extraInfo) {
+                        // AJOUT DE L'EFFET DE BULLE (bg-black/50 px-2 py-0.5 rounded-full inline-block)
+                        extraInfo += `<p class="text-xs font-bold mt-1">
+                                            <span class="bg-black/50 px-2 py-0.5 rounded-full inline-block text-green-400">
+                                                ${product.extraInfo.toUpperCase()}
+                                            </span>
+                                        </p>`;
                     }
 
                     card.innerHTML = `
@@ -796,20 +843,46 @@
                         allMedia.push({ url: url, variety: vName, isVideo: true });
                     });
                 });
-            } else {
-                // Logique pour les autres produits (une seule variété/liste d'images)
-                const defaultVariety = product.varieties[0];
-                product.images.forEach(url => {
-                    allMedia.push({ url: url, variety: defaultVariety });
+            } 
+            // Logique pour Frozen Sift (UN SEUL media pour l'image et UN SEUL media pour la vidéo)
+            else if (product.id === 'frozenSift') {
+                 const defaultVariety = product.varieties[0];
+                 
+                 // 1. Ajouter la vidéo en premier
+                allMedia.push({ url: FROZEN_SIFT_VIDEO, variety: defaultVariety, isVideo: true });
+                
+                // 2. Ajouter l'image en second
+                allMedia.push({ url: FROZEN_SIFT_CARD_IMAGE, variety: defaultVariety, isImage: true });
+                
+                // Si Cali US Loose n'était pas un produit spécial, le Frozen Sift n'aurait pas besoin de toute cette logique de carrousel complexe.
+                // Ici, nous nous assurons que tous les slides sont associés à la première variété pour que la sélection de la variété ne change rien.
+                product.varieties.forEach(vName => {
+                     // S'assurer que chaque variété pointe vers le début du carrousel (où est la vidéo)
+                    if (vName !== defaultVariety) {
+                        allMedia.push({ url: FROZEN_SIFT_VIDEO, variety: vName, isVideo: true });
+                    }
                 });
-            }
 
+            }
+            else {
+                // Logique pour les autres produits
+                const defaultVariety = product.varieties.length > 0 ? product.varieties[0] : 'Standard';
+                
+                // Si le produit a des images définies
+                if (product.images && product.images.length > 0) {
+                    product.images.forEach(url => {
+                        allMedia.push({ url: url, variety: defaultVariety, isImage: true });
+                    });
+                }
+            }
+            
             currentProductMediaList = allMedia;
             
             // 3. Construire les slides et trouver l'index de départ
             allMedia.forEach((mediaItem, index) => {
                 const media = mediaItem.url;
                 const variety = mediaItem.variety;
+                const isVideo = mediaItem.isVideo; // Nouvelle propriété pour distinguer
 
                 const mediaElement = document.createElement('div');
                 mediaElement.className = 'carousel-item';
@@ -819,7 +892,8 @@
                 let content;
                 if (media.includes('youtube.com')) {
                     content = `<iframe src="${media}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
-                } else if (media.includes('.mp4') || mediaItem.isVideo) {
+                } else if (isVideo || media.includes('.mp4')) {
+                    // Utiliser le lien direct
                     content = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="${media}" type="video/mp4"></video>`;
                 } else {
                     content = `<img src="${media}" alt="${product.name}" class="w-full h-full">`;
@@ -832,6 +906,15 @@
                     firstVarietySlideIndex = index;
                 }
             });
+
+            // Pour Frozen Sift, nous nous assurons que le carrousel ne contient que la vidéo (index 0) et l'image (index 1) et les slides suivants sont inutiles
+            if (product.id === 'frozenSift') {
+                while (carouselTrack.children.length > 2) {
+                    carouselTrack.removeChild(carouselTrack.lastChild);
+                }
+                currentSlide = 0; // Commencer par la vidéo
+            }
+
 
             // 4. Définir le slide de départ
             currentSlide = firstVarietySlideIndex !== -1 ? firstVarietySlideIndex : 0;
@@ -856,8 +939,8 @@
                 selectedVariety = variety;
             }
             
-            // 2. Si un événement de clic est présent, faire sauter le carrousel au premier média de cette variété
-            if (event) {
+            // 2. Si un événement de clic est présent et que le produit est CaliLoose ou FrozenSift, faire sauter le carrousel au premier média de cette variété
+            if (event && (currentProduct.id === 'caliLoose' || currentProduct.id === 'frozenSift')) {
                 const totalSlides = carouselTrack.children.length;
                 let targetIndex = -1;
                 
@@ -892,8 +975,8 @@
 
             // Afficher les options
             productOptions.innerHTML = `
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2">Variété</h3>
+                <div class="mb-6"> <!-- Changement de mb-4 à mb-6 pour l'écart -->
+                    <h3 class="text-xl font-bold mb-2">Variété:</h3>
                     <div class="flex flex-wrap gap-2" id="variety-options">
                         ${currentProduct.varieties.map((v, i) => `
                             <button data-value="${v}" class="px-3 py-1 rounded-full border border-gray-600 hover:bg-gray-700 transition-colors text-xs variety-btn" onclick="selectVariety('${v}', event)">${v}</button>
@@ -901,7 +984,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold mb-2">Poids et Prix</h3>
+                    <h3 class="text-xl font-bold mb-2">Poids et Prix:</h3>
                     <div class="flex flex-wrap gap-2" id="weight-options">
                         ${Object.keys(currentProduct.prices).map((w, i) => `
                             <button data-weight="${w}" class="weight-button" onclick="selectWeight('${w}')">
@@ -994,7 +1077,10 @@
                     if (product.id === 'caliLoose') {
                         // Utiliser l'image de présentation pour la vignette du panier
                         imageUrl = CALI_LOOSE_PRESENTATION_IMAGE;
-                    } else {
+                    } else if (product.id === 'frozenSift') {
+                        imageUrl = FROZEN_SIFT_CARD_IMAGE;
+                    } 
+                    else {
                         // Utiliser le premier média non-vidéo comme vignette
                         const firstImage = product.images.find(m => !m.includes('.mp4') && !m.includes('youtube.com')); 
                         if (firstImage) {
