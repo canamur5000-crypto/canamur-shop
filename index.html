@@ -1184,21 +1184,31 @@
                 return;
             }
             
-            let message = "Salut, je voudrais passer une commande :\n\n";
+            let messageHeader = "Salut, je voudrais passer une commande : ";
+            let itemsString = "";
             let total = 0;
 
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 const itemTotal = item.price * item.quantity;
-                // J'ai inclus le prix total de l'article dans la ligne
-                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${itemTotal}€\n`;
+                
+                // Format de chaque article : [Nom (Variété, Poids) x Quantité -> Prix]
+                itemsString += `[${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${itemTotal}€]`;
+
                 total += itemTotal;
+
+                // Ajouter un séparateur simple entre les articles (sauf le dernier)
+                if (index < items.length - 1) {
+                    itemsString += " | ";
+                }
             });
             
-            message += `\nTotal de la commande : ${total}€\n\nMerci !`;
+            let messageFooter = `Total de la commande : ${total}€`;
+            
+            // Concaténer le tout sans saut de ligne, juste des espaces
+            const fullMessage = `${messageHeader} ${itemsString} | ${messageFooter} | Merci !`;
 
-            // Encodage standard: remplacez \n par %0A pour les navigateurs, mais assurez-vous de n'encoder le message qu'une seule fois
-            // Et ne pas laisser de caractères bruts dans le template de la chaîne.
-            const encodedMessage = encodeURIComponent(message);
+            // Encodage
+            const encodedMessage = encodeURIComponent(fullMessage);
             
             const telegramUrl = `https://t.me/Dailyhash?text=${encodedMessage}`;
             window.location.href = telegramUrl;
