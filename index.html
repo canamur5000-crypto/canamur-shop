@@ -1151,12 +1151,16 @@
             const weight = selectedWeight;
             const price = currentProduct.prices[weight];
             const quantity = 1;
-            const message = `Bonjour, je souhaite commander :
-            - ${currentProduct.name}
-            - Variété: ${variety}
-            - Poids: ${weight}
-            - Quantité: ${quantity}
-            - Prix: ${price * quantity}€`;
+            const totalItemPrice = price * quantity;
+            
+            // Message format for instant buy
+            let message = `Bonjour, je souhaite commander :
+- ${currentProduct.name}
+- Variété: ${variety}
+- Poids: ${weight}
+- Quantité: ${quantity}
+- Prix total: ${totalItemPrice}€`;
+
             const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
             window.location.href = telegramUrl;
         });
@@ -1180,25 +1184,23 @@
                 return;
             }
             
-            // Utiliser %0A pour les sauts de ligne pour un meilleur affichage sur Telegram
-            let message = "Salut, je voudrais passer une commande :%0A%0A"; 
+            let message = "Salut, je voudrais passer une commande :\n\n";
             let total = 0;
 
             items.forEach(item => {
-                const lineTotal = item.price * item.quantity;
-                total += lineTotal;
-                
-                // Formatage de la ligne de commande : Nom (Variété, Poids) x Quantité @ PrixTotal€
-                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${lineTotal}€%0A`; 
+                const itemTotal = item.price * item.quantity;
+                // J'ai inclus le prix total de l'article dans la ligne
+                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${itemTotal}€\n`;
+                total += itemTotal;
             });
             
-            // Ajout du total final
-            message += `%0A---------------------------%0A`;
-            message += `TOTAL À PAYER : ${total}€%0A%0A`;
-            message += `Merci !`;
+            message += `\nTotal de la commande : ${total}€\n\nMerci !`;
 
-            // Encodage complet du message pour l'URL
-            const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
+            // Encodage standard: remplacez \n par %0A pour les navigateurs, mais assurez-vous de n'encoder le message qu'une seule fois
+            // Et ne pas laisser de caractères bruts dans le template de la chaîne.
+            const encodedMessage = encodeURIComponent(message);
+            
+            const telegramUrl = `https://t.me/Dailyhash?text=${encodedMessage}`;
             window.location.href = telegramUrl;
             
             cartItems = {};
