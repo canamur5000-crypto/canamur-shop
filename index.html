@@ -1179,17 +1179,22 @@
                 showMessage("Votre panier est vide. Ajoutez des produits avant de commander.");
                 return;
             }
-            let message = "Salut, je voudrais passer une commande :\n\n";
+            
+            let message = "Salut, je voudrais passer une commande :%0A%0A"; // Utiliser %0A pour les sauts de ligne
             let total = 0;
 
             items.forEach(item => {
-                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity}\n`;
+                // Construction de la ligne d'article avec saut de ligne explicite après
+                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity}%0A`; 
                 total += item.price * item.quantity;
             });
-            message += `\nTotal: ${total}€\n\nMerci !`;
+            
+            message += `%0ATotal: ${total}€%0A%0AMerci !`;
 
-            const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
+            // Remplacer manuellement le premier saut de ligne pour un formatage parfait
+            const telegramUrl = `https://t.me/Dailyhash?text=${message}`;
             window.location.href = telegramUrl;
+            
             cartItems = {};
             saveCart();
             updateCartPage();
