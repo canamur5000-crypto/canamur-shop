@@ -1180,19 +1180,25 @@
                 return;
             }
             
-            let message = "Salut, je voudrais passer une commande :%0A%0A"; // Utiliser %0A pour les sauts de ligne
+            // Utiliser %0A pour les sauts de ligne pour un meilleur affichage sur Telegram
+            let message = "Salut, je voudrais passer une commande :%0A%0A"; 
             let total = 0;
 
             items.forEach(item => {
-                // Construction de la ligne d'article avec saut de ligne explicite après
-                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity}%0A`; 
-                total += item.price * item.quantity;
+                const lineTotal = item.price * item.quantity;
+                total += lineTotal;
+                
+                // Formatage de la ligne de commande : Nom (Variété, Poids) x Quantité @ PrixTotal€
+                message += `- ${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${lineTotal}€%0A`; 
             });
             
-            message += `%0ATotal: ${total}€%0A%0AMerci !`;
+            // Ajout du total final
+            message += `%0A---------------------------%0A`;
+            message += `TOTAL À PAYER : ${total}€%0A%0A`;
+            message += `Merci !`;
 
-            // Remplacer manuellement le premier saut de ligne pour un formatage parfait
-            const telegramUrl = `https://t.me/Dailyhash?text=${message}`;
+            // Encodage complet du message pour l'URL
+            const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
             window.location.href = telegramUrl;
             
             cartItems = {};
