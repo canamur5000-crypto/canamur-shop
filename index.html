@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -39,23 +40,27 @@
         }
         .nav-link {
             color: #d1d5db;
-            transition: color 0.2s; /* Ajout d'une transition pour le clic */
+            transition: color 0.2s, transform 0.1s; 
         }
         .nav-link.active {
             color: #7b4397;
         }
+         .nav-link:active { 
+             transform: scale(0.95);
+             color: #7b4397; 
+        }
         .product-card {
-            background-color: #2a2a47;
+            background-color: #2a2a47; 
             border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s; /* Transition pour survol et pression */
+            transition: transform 0.2s, box-shadow 0.2s; 
         }
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .product-card:active {
-            transform: scale(0.97); /* Effet de pression */
+            transform: scale(0.97); 
         }
         
         .category-pill {
@@ -66,7 +71,7 @@
             padding: 0.35rem 1rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s; /* Transition pour pression */
+            transition: background-color 0.2s, transform 0.1s; 
             font-size: 0.875rem;
         }
         .category-pill:hover,
@@ -74,39 +79,37 @@
             background-color: rgba(93, 93, 129, 0.5);
         }
         .category-pill:active {
-            transform: scale(0.95); /* Effet de pression */
+            transform: scale(0.95); 
         }
-        .carousel-container {
+        .carousel-container { 
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
+            border-radius: 0.75rem; 
             width: 100%;
             height: auto;
-            aspect-ratio: 4 / 3;
         }
         .carousel-slide {
             display: flex;
             transition: transform 0.5s ease-in-out;
             width: 100%;
+            height: 100%; 
             touch-action: pan-y;
         }
         .carousel-item {
             flex-shrink: 0;
             width: 100%;
-            height: auto;
+            height: 100%; 
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
-        /* Assure que la vidéo ou l'image remplisse l'espace sans être déformée */
         .carousel-item img, .carousel-item iframe, .carousel-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 12px;
         }
-        .carousel-button {
+        .carousel-button { 
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -209,11 +212,11 @@
             align-items: center;
             justify-content: center;
             font-size: 0.875rem;
-            transition: transform 0.1s; /* Ajout d'une transition pour la pression */
+            transition: transform 0.1s; 
         }
 
         .action-button:active {
-            transform: scale(0.97); /* Effet de pression */
+            transform: scale(0.97); 
         }
 
         .order-button {
@@ -268,12 +271,13 @@
         }
 
         /* Styles de la page produit */
-        .product-page-image-container {
+        .product-page-image-container { 
             width: 100%;
             height: 60vh;
             overflow: hidden;
             position: relative;
-            background-color: #2a2a47;
+            background-color: #2a2a47; 
+            border-radius: 0.75rem;
         }
 
         .product-page-image-container img,
@@ -283,8 +287,9 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
+            border-radius: 0.75rem;
         }
-        /* S'assurer que les vidéos n'ont pas de marges ou de padding inutiles */
+        
         .carousel-item video {
             display: block;
         }
@@ -312,14 +317,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         .product-page-content {
@@ -332,11 +331,11 @@
             padding: 0.5rem 1rem;
             font-weight: 500;
             color: #ffffff;
-            transition: background-color 0.2s, transform 0.1s; /* Transition pour la pression */
+            transition: background-color 0.2s, transform 0.1s; 
             text-align: center;
         }
         .weight-button:active {
-            transform: scale(0.95); /* Effet de pression */
+            transform: scale(0.95); 
         }
         .weight-button.active {
             background-color: #7b4397;
@@ -362,11 +361,51 @@
 
         /* Styles pour les boutons de la page produit (variété) */
         .variety-btn {
-            transition: transform 0.1s;
+            transition: transform 0.1s, background-color 0.2s, border-color 0.2s; 
+            border: 1px solid #4a5568; 
+            color: #cbd5e1;
         }
+         .variety-btn:hover {
+            background-color: #4a5568; 
+         }
+         .variety-btn.active { 
+             background-color: #6d28d9; 
+             border-color: #8b5cf6; 
+             color: white;
+         }
         .variety-btn:active {
             transform: scale(0.95);
         }
+         /* Style pour les points du carrousel d'accueil */
+        #hero-carousel-dots span {
+             cursor: pointer;
+             transition: background-color 0.3s, transform 0.2s;
+             width: 0.5rem; 
+             height: 0.5rem; 
+             border-radius: 9999px; 
+        }
+         #hero-carousel-dots span.active {
+             background-color: white;
+             transform: scale(1.25); 
+         }
+         #hero-carousel-dots span:not(.active) {
+             background-color: #6b7280; 
+         }
+         #hero-carousel-dots span:not(.active):hover {
+            background-color: #d1d5db; 
+             transform: scale(1.1);
+         }
+         
+         #hero-carousel-track .carousel-item {
+             height: auto; 
+         }
+         #hero-carousel-track .carousel-item img,
+         #hero-carousel-track .carousel-item video {
+             height: auto; 
+             width: 100%;
+             object-fit: cover; 
+             border-radius: 0.75rem; 
+         }
     </style>
 </head>
 <body class="bg-[#1A1A2E] text-white">
@@ -400,7 +439,6 @@
         <div class="separator"></div>
 
         <!-- Grille des produits -->
-        <!-- La classe de la grille est maintenant gérée dynamiquement par JS -->
         <section id="product-grid" class="pt-4">
             <!-- Les cartes de produits seront générées dynamiquement ici -->
         </section>
@@ -434,7 +472,6 @@
                 
                 <div id="product-options" class="mb-6">
                     <!-- Les options de variété et de poids seront injectées ici -->
-                    <!-- J'ai mis à jour le conteneur ici pour mieux séparer les groupes d'options -->
                 </div>
 
                 <div class="flex flex-col space-y-4">
@@ -479,227 +516,249 @@
     <div class="separator"></div>
 
     <!-- Barre de navigation en bas -->
-    <nav class="nav-bar fixed bottom-4 flex justify-around items-center h-20 shadow-lg">
+     <nav class="nav-bar fixed bottom-4 flex justify-around items-center h-16 shadow-lg">
+         
         <a href="#" onclick="window.showHome()" class="nav-link flex flex-col items-center">
             <i class="fas fa-home text-xl"></i>
             <span class="text-xs mt-1">Accueil</span>
         </a>
+      
         <a href="https://www.instagram.com/canamur5k?igsh=MXdxYjZ6dm1yOGky" target="_blank" class="nav-link flex flex-col items-center">
             <i class="fab fa-instagram text-xl"></i>
             <span class="text-xs mt-1">Instagram</span>
         </a>
+          
         <a href="https://ptwdym158.org/DailyHash" target="_blank" class="nav-link flex flex-col items-center">
             <i class="fas fa-link text-xl"></i>
             <span class="text-xs mt-1">Potato</span>
         </a>
+          
         <a href="https://t.me/Dailyhash" target="_blank" class="nav-link flex flex-col items-center">
-            <i class="fab fa-telegram-plane text-xl"></i>
+            <i class="fab fa-telegram text-xl"></i>
             <span class="text-xs mt-1">Telegram</span>
         </a>
+          
         <a href="#" onclick="window.openCartPage()" class="nav-link relative flex flex-col items-center">
             <i class="fas fa-shopping-basket text-xl"></i>
             <span class="text-xs mt-1">Panier</span>
-            <span id="cart-counter" class="absolute top-0 right-2 bg-red-500 rounded-full text-xs font-bold w-5 h-5 flex items-center justify-center -mt-2">0</span>
+            <span id="cart-counter" class="absolute top-0 right-2 bg-red-500 rounded-full text-xs font-bold w-5 h-5 flex items-center justify-center -mt-2" style="display: none;">0</span>
         </a>
-    </nav>
+      
+     </nav>
 
     <!-- Scripts JavaScript -->
     <script>
+        // #############################################################
+        // # DÉBUT DE L'INJECTION DE DONNÉES
+        // #############################################################
+        const products = {
+    "caliLoose": {
+        "id": "caliLoose",
+        "name": "Cali US Loose",
+        "prices": {
+            "3.5g": 45,
+            "5g": 60,
+            "10g": 110,
+            "12.5g": 130,
+            "25g": 225
+        },
+        "category": "weed",
+        "varieties": [
+            "White Runtz"
+        ],
+        "images": [
+            "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/preview.png"
+        ],
+        "mediaMap": {
+            "White Runtz": [
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/nwhite%20runtz.mp4"
+            ]
+        },
+        "extraInfo": "TOP QUALITE ",
+        "extraInfoColor": "#988db9",
+        "color": "#ffffff",
+        "cardColor": "#2a2a47"
+    },
+    "frozenSift": {
+        "id": "frozenSift",
+        "name": "Frozen Sift Streetfarmz",
+        "prices": {
+            "3.5g": 60,
+            "5g": 85,
+            "10g": 150,
+            "12.5g": 175,
+            "25g": 320
+        },
+        "category": "hash",
+        "varieties": [
+            "Trap Grape",
+            "Trop Cherry X Gazmint",
+            "Weeding Cake"
+        ],
+        "images": [
+            "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg"
+        ],
+        "mediaMap": {
+            "Trap Grape": [
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg",
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/vluggejapieterpz-20251012-0001.mp4"
+            ],
+            "Trop Cherry X Gazmint": [
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg",
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/vluggejapieterpz-20251012-0001.mp4"
+            ],
+            "Weeding Cake": [
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg",
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/vluggejapieterpz-20251012-0001.mp4"
+            ]
+        },
+        "extraInfo": "NEW SEASON",
+        "extraInfoColor": "#34d399",
+        "color": "#ffffff",
+        "cardColor": "#2a2a47"
+    }
+};
+        const heroImages = ["https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1757022565259.jpg","https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1758993410955.jpg","https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1758993497780.jpg"];
+        // #############################################################
+        // # FIN DE L'INJECTION DE DONNÉES
+        // #############################################################
+
+        // --- CONSTANTES SPÉCIFIQUES (copiées de votre script) ---
+        // Remarque: Celles-ci ne sont plus utilisées par la logique de base, 
+        // mais conservées si vous avez des produits qui y font référence.
         const BASE_URL = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/';
-
-        // Image de présentation générique pour Cali US Loose (affichée en premier)
         const CALI_LOOSE_PRESENTATION_IMAGE = BASE_URL + 'preview.png';
-        
-        // --- MÉDIAS FROZEN SIFT (Utilisation des URL Raw de GitHub) ---
-        // 1. Image principale pour la carte produit
         const FROZEN_SIFT_CARD_IMAGE = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg'; 
-        // 2. Vidéo pour le carrousel
         const FROZEN_SIFT_VIDEO = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/vluggejapieterpz-20251012-0001.mp4';
-        // ----------------------------------------------------------------------
-
-
-        // Mappage des vidéos aux variétés de Cali US Loose
         const CALI_LOOSE_MEDIA_MAP = {
             'White Runtz': [BASE_URL + 'nwhite%20runtz.mp4'],
             'Weeding Crasher': [BASE_URL + 'Weeding%20.mp4'],
-            // AJOUT DE LA NOUVELLE VARIÉTÉ
             'Lemon Cherry Runtz': ['https://placehold.co/600x600/1a1a2e/ffffff?text=Video+Lemon+Cherry']
         };
+        // --- FIN DES CONSTANTES SPÉCIFIQUES ---
+
         
-        const products = {
-            'caliLoose': {
-                id: 'caliLoose',
-                name: 'Cali US Loose',
-                prices: {
-                    '3.5g': 45,
-                    '5g': 60,
-                    '10g': 110,
-                    '12.5g': 130,
-                    '25g': 225
-                },
-                category: 'weed',
-                // AJOUT DE LA NOUVELLE VARIÉTÉ
-                varieties: ['White Runtz', 'Weeding Crasher', 'Lemon Cherry Runtz'],
-                images: [CALI_LOOSE_PRESENTATION_IMAGE], 
-            },
-            'frozenSift': { // NOUVEAU PRODUIT AJOUTÉ
-                id: 'frozenSift',
-                name: 'Frozen Sift Streetfarmz',
-                prices: {
-                    '3.5g': 60,
-                    '5g': 85,
-                    '10g': 150,
-                    '12.5g': 175,
-                    '25g': 320
-                },
-                category: 'hash',
-                varieties: ['Trap Grape', 'Trop Cherry X Gazmint', 'Weeding Cake'],
-                // MISE À JOUR : Utilisation de l'image GitHub pour la carte produit
-                images: [FROZEN_SIFT_CARD_IMAGE], 
-                extraInfo: "NEW SEASON", // Information additionnelle pour l'affichage
-                // NOUVEAU: Mappage de la vidéo GitHub à toutes les variétés de Frozen Sift
-                mediaMap: {
-                    'Trap Grape': [FROZEN_SIFT_VIDEO],
-                    'Trop Cherry X Gazmint': [FROZEN_SIFT_VIDEO],
-                    'Weeding Cake': [FROZEN_SIFT_VIDEO]
-                }
-            }
-        };
-
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+        let currentFilter = null;
+        let currentProduct = null;
+        let selectedVariety = null;
+        let selectedWeight = null;
+        let currentSlide = 0; // Pour carrousel page produit
+        let startX = 0;
+        let endX = 0;
+        let heroSlideIndex = 0; // Pour carrousel accueil
+        let heroCarouselInterval;
 
+        // --- Sélecteurs DOM ---
         const mainApp = document.getElementById('main-app');
         const productPage = document.getElementById('product-page');
         const cartPage = document.getElementById('cart-page');
         const cartCounter = document.getElementById('cart-counter');
         const productName = document.getElementById('product-name');
         const productOptions = document.getElementById('product-options');
-        const carouselTrack = document.getElementById('carousel-track');
+        const carouselTrack = document.getElementById('carousel-track'); // Page produit
         const buyNowBtn = document.getElementById('buy-now-btn');
         const addToCartBtn = document.getElementById('add-to-cart-btn');
         const productGrid = document.getElementById('product-grid');
         const productCategoryTitle = document.getElementById('product-category');
-        const heroCarouselTrack = document.getElementById('hero-carousel-track');
-        const heroCarouselDots = document.getElementById('hero-carousel-dots');
-        
-        let currentFilter = null;
-        let currentProduct = null;
-        let selectedVariety = null; 
-        let selectedWeight = null;
-        let currentSlide = 0;
-        let startX = 0;
-        let endX = 0;
+        const heroCarouselTrack = document.getElementById('hero-carousel-track'); // Accueil
+        const heroCarouselDots = document.getElementById('hero-carousel-dots'); // Accueil
 
-        // Liste contenant tous les médias chargés pour le produit actuel, avec leur variété associée
-        let currentProductMediaList = []; 
+        // --- Carrousel d'Accueil (JS CORRIGÉ) ---
+         function updateHeroCarousel() {
+             if (!heroCarouselTrack || !heroCarouselDots) return; 
 
-        // NOUVELLE LISTE COMPLÈTE DU CARROUSEL D'ACCUEIL
-        const heroImages = [
-            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1757022565259.jpg', // Ajout de la première image
-            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1758993410955.jpg',
-            'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/1758993497780.jpg'
-        ];
-        
-        let heroSlideIndex = 0;
-        let heroCarouselInterval;
+             heroCarouselTrack.innerHTML = '';
+             heroCarouselDots.innerHTML = '';
+             (heroImages || []).forEach((url, index) => { 
+                 const item = document.createElement('div');
+                 item.className = 'carousel-item';
+                 
+                 let content;
+                 if (url.toLowerCase().includes('.mp4')) { 
+                   content = `<video autoplay controls playsinline loop muted class="w-full h-full object-cover"><source src="${url}" type="video/mp4">Vidéo non supportée.</video>`;
+                 } else {
+                   content = `<img src="${url}" alt="Image d'accueil ${index + 1}" class="w-full h-full object-cover" onerror="this.parentElement.style.display='none';">`;
+                 }
+                 item.innerHTML = content;
+                 
+                 heroCarouselTrack.appendChild(item);
 
-        function updateHeroCarousel() {
-            heroCarouselTrack.innerHTML = '';
-            heroCarouselDots.innerHTML = '';
-            heroImages.forEach((imgUrl, index) => {
-                const imgElement = document.createElement('img');
-                imgElement.src = imgUrl;
-                imgElement.className = 'w-full h-full object-cover flex-shrink-0';
-                heroCarouselTrack.appendChild(imgElement);
+                 const dot = document.createElement('span');
+                 dot.setAttribute('data-index', index);
+                 dot.onclick = () => goToHeroSlide(index); 
+                 dot.className = index === heroSlideIndex ? 'active' : ''; 
+                 heroCarouselDots.appendChild(dot);
+             });
+             heroCarouselDots.style.display = (heroImages && heroImages.length > 1) ? 'flex' : 'none';
+             if (heroCarouselTrack) { 
+                heroCarouselTrack.style.transform = `translateX(-${heroSlideIndex * 100}%)`;
+             }
+        }
 
-                const dot = document.createElement('span');
-                dot.className = `w-2 h-2 rounded-full ${index === heroSlideIndex ? 'bg-white' : 'bg-gray-400'}`;
-                heroCarouselDots.appendChild(dot);
-            });
-            heroCarouselTrack.style.transform = `translateX(-${heroSlideIndex * 100}%)`;
+        function goToHeroSlide(index) {
+             if (index === heroSlideIndex) return;
+             heroSlideIndex = index;
+             updateHeroCarousel();
+             startHeroCarousel(); // Redémarre le timer
         }
 
         function startHeroCarousel() {
             if (heroCarouselInterval) clearInterval(heroCarouselInterval);
-            heroCarouselInterval = setInterval(() => {
-                heroSlideIndex = (heroSlideIndex + 1) % heroImages.length;
-                updateHeroCarousel();
-            }, 3000);
-        }
-
-        function saveCart() {
-            localStorage.setItem('cartItems', JSON.stringify(cartItems));
-            updateCartCounter();
-        }
-
-        function updateCartCounter() {
-            let count = 0;
-            for (const itemId in cartItems) {
-                count += cartItems[itemId].quantity;
+            if (heroImages && heroImages.length > 1) {
+                heroCarouselInterval = setInterval(() => {
+                    heroSlideIndex = (heroSlideIndex + 1) % heroImages.length;
+                    updateHeroCarousel();
+                }, 4000); // 4 secondes
             }
-            cartCounter.textContent = count;
+        }
+        // --- Fin Carrousel d'Accueil ---
+
+
+        // --- Gestion Panier ---
+        function saveCart() { localStorage.setItem('cartItems', JSON.stringify(cartItems)); updateCartCounter(); }
+        function updateCartCounter() { 
+            let count = 0; 
+            for (const itemId in cartItems) count += cartItems[itemId].quantity; 
+            if (cartCounter) { 
+                cartCounter.textContent = count;
+                cartCounter.style.display = count > 0 ? 'flex' : 'none';
+            }
         }
 
+        // --- Grille Produits (Logique de génération depuis le JS du template) ---
         function initProductGrid() {
-            productGrid.innerHTML = '';
-            const allProducts = Object.values(products);
+             if (!productGrid) return;
+             productGrid.innerHTML = '';
+            const allProducts = Object.values(products || {}); // Sécurité
             const displayedProducts = currentFilter ? allProducts.filter(p => p.category === currentFilter) : allProducts;
-
-            // Logique de mise en page: grille 2 colonnes par défaut, centré si un seul produit
-            if (displayedProducts.length === 1) {
-                // Centrer le produit unique
-                productGrid.className = 'flex justify-center pt-4'; 
-            } else {
-                // Grille 2 colonnes par défaut
-                productGrid.className = 'grid grid-cols-2 gap-4 pt-4';
-            }
-
-
-            if (displayedProducts.length === 0) {
-                productGrid.innerHTML = '<p class="text-center text-gray-400 col-span-full">Restock en cours...</p>';
-            } else {
+            productGrid.className = displayedProducts.length === 1 ? 'flex justify-center pt-4' : 'grid grid-cols-2 gap-4 pt-4'; // Rétabli gap-4
+            if (displayedProducts.length === 0) { productGrid.innerHTML = '<p class="text-center text-gray-400 col-span-full py-10">Restock en cours...</p>'; }
+            else {
                 displayedProducts.forEach(product => {
                     const card = document.createElement('div');
-                    // Ajout de la classe active:scale-[0.97] pour l'animation
-                    card.className = 'product-card cursor-pointer active:scale-[0.97]'; 
-
-                    // Si un seul produit, on lui donne une largeur plus importante (max-w-xs)
-                    if (displayedProducts.length === 1) {
-                        card.classList.add('w-full', 'max-w-xs');
-                    }
-                    
+                    card.className = 'product-card cursor-pointer active:scale-[0.97]';
+                    card.style.backgroundColor = product.cardColor || '#2a2a47'; // Applique couleur cadre
+                    if (displayedProducts.length === 1) card.classList.add('w-full', 'max-w-xs');
                     card.onclick = () => showProduct(product.id);
                     
-                    let imageUrl = 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
-                    if (Array.isArray(product.images) && product.images.length > 0) {
-                        imageUrl = product.images[0];
-                    }
+                    let imageUrl = (product.images && product.images.length > 0) ? product.images[0] : 'https://placehold.co/600x600/1e293b/fff?text=Image+Produit';
                     
                     let extraInfo = '';
-                    // Affichage des variétés pour CaliLoose
-                    if (product.id === 'caliLoose' && product.varieties && product.varieties.length > 1) {
-                        // APPLICATION DU STYLE BULLE sur la phrase "3 TOP VARIÉTÉS"
-                        extraInfo += `<p class="text-xs font-bold mt-1">
-                                            <span class="bg-purple-900/50 px-2 py-0.5 rounded-full inline-block text-purple-300">
-                                                3 TOP VARIÉTÉS
-                                            </span>
-                                        </p>`;
-                    }
-                    // Affichage de l'information supplémentaire (ex: NEW SEASON)
                     if (product.extraInfo) {
-                        // AJOUT DE L'EFFET DE BULLE (bg-black/50 px-2 py-0.5 rounded-full inline-block)
-                        extraInfo += `<p class="text-xs font-bold mt-1">
-                                            <span class="bg-black/50 px-2 py-0.5 rounded-full inline-block text-green-400">
-                                                ${product.extraInfo.toUpperCase()}
-                                            </span>
-                                        </p>`;
+                         const infoTextColor = product.extraInfoColor || '#34d399'; // Applique couleur texte info
+                         extraInfo += `<p class="text-xs font-bold mt-1"><span class="bg-black/50 px-2 py-0.5 rounded-full inline-block" style="color: ${infoTextColor};">${product.extraInfo.toUpperCase()}</span></p>`;
+                    } else if (product.varieties && product.varieties.length > 1 && !(product.varieties.length === 1 && product.varieties[0] === product.name)) {
+                         extraInfo += `<p class="text-xs font-bold mt-1"><span class="bg-purple-900/50 px-2 py-0.5 rounded-full inline-block text-purple-300">${product.varieties.length} VARIÉTÉS</span></p>`;
                     }
 
+                    const titleColor = product.color || '#ffffff'; // Applique couleur titre
+                    
                     card.innerHTML = `
-                        <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl">
+                        <img src="${imageUrl}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/2a2a47/fff?text=Img'; this.onerror=null;">
                         <div class="p-2">
-                            <h3 class="font-bold text-sm">${product.name}</h3>
-                            <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : `${product.price}€ / ${product.unit}`}</p>
+                            <h3 class="font-bold text-sm" style="color: ${titleColor};">${product.name}</h3>
+                            <p class="text-gray-400 text-xs">${product.prices ? `À partir de ${Object.values(product.prices)[0]}€` : 'Prix non défini'}</p>
                             ${extraInfo}
                         </div>
                     `;
@@ -707,523 +766,196 @@
                 });
             }
         }
-
         window.toggleFilter = function(category) {
-            const weedPill = document.getElementById('weed-pill');
-            const hashPill = document.getElementById('hash-pill');
-            
-            if (currentFilter === category) {
-                currentFilter = null;
-                weedPill.classList.remove('active');
-                hashPill.classList.remove('active');
-            } else {
-                currentFilter = category;
-                weedPill.classList.remove('active');
-                hashPill.classList.remove('active');
-                document.getElementById(`${category}-pill`).classList.add('active');
-            }
+            const pills = ['weed-pill', 'hash-pill'];
+            if (currentFilter === category) { currentFilter = null; pills.forEach(id => document.getElementById(id)?.classList.remove('active')); } 
+            else { currentFilter = category; pills.forEach(id => document.getElementById(id)?.classList.remove('active')); document.getElementById(`${category}-pill`)?.classList.add('active'); } 
             initProductGrid();
-        };
+         };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initProductGrid();
-            updateHeroCarousel();
-            startHeroCarousel();
-            updateCartCounter();
-        });
 
-        function pauseAllVideos() {
-            carouselTrack.querySelectorAll('video').forEach(video => {
-                if (!video.paused) {
-                    video.pause();
-                }
-            });
-        }
-
+        // --- Carrousel Page Produit ---
+        function pauseAllVideos() { carouselTrack?.querySelectorAll('video').forEach(video => { if (!video.paused) video.pause(); }); } 
         function playCurrentVideo() {
-            const currentItem = carouselTrack.children[currentSlide];
-            if (currentItem) {
-                const video = currentItem.querySelector('video');
-                if (video) {
-                    video.currentTime = 0; // Rembobiner la vidéo
-                    video.play().catch(e => console.log('Autoplay blocked:', e));
-                }
-            }
-        }
-
-        function updateCarousel() {
-            const totalSlides = carouselTrack.children.length;
-            if (totalSlides > 0) {
-                carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            const currentItem = carouselTrack?.children[currentSlide]; 
+            if (currentItem) { const video = currentItem.querySelector('video'); if (video) { video.currentTime = 0; video.play().catch(e => console.log('Autoplay blocked:', e)); } }
+         }
+        function updateCarousel() { 
+            const totalSlides = carouselTrack?.children.length || 0; 
+            if (totalSlides > 0) { 
+                carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`; 
+                pauseAllVideos(); 
+                playCurrentVideo(); 
                 
-                // Pause all videos except the current one
-                pauseAllVideos();
-                playCurrentVideo();
-
-                // NOUVEAU: Mettre à jour la variété sélectionnée en fonction du slide actuel
+                // --- LOGIQUE INVERSÉE (Slide change -> Bouton sélectionné) ---
                 const currentSlideElement = carouselTrack.children[currentSlide];
                 if (currentSlideElement) {
                     const slideVariety = currentSlideElement.getAttribute('data-variety');
                     if (slideVariety && slideVariety !== selectedVariety) {
-                        // Mettre à jour la variété sélectionnée et l'interface utilisateur
-                        window.selectVariety(slideVariety);
+                        // Appelle selectVariety SANS événement pour juste mettre à jour le UI
+                        window.selectVariety(slideVariety, null); 
                     }
                 }
-            }
+            } 
+        } 
+        window.nextSlide = function() { const total = carouselTrack?.children.length || 0; if (total > 1) { currentSlide = (currentSlide + 1) % total; updateCarousel(); } } 
+        window.prevSlide = function() { const total = carouselTrack?.children.length || 0; if (total > 1) { currentSlide = (currentSlide - 1 + total) % total; updateCarousel(); } } 
+        if (carouselTrack) {
+            carouselTrack.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; pauseAllVideos(); }, { passive: true });
+            carouselTrack.addEventListener('touchend', (e) => { endX = e.changedTouches[0].clientX; const diffX = endX - startX; if (diffX > 50) window.prevSlide(); else if (diffX < -50) window.nextSlide(); else playCurrentVideo(); });
         }
 
-        window.nextSlide = function() {
-            const totalSlides = carouselTrack.children.length;
-            if (totalSlides > 1) {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                updateCarousel();
-            }
-        }
 
-        window.prevSlide = function() {
-            const totalSlides = carouselTrack.children.length;
-            if (totalSlides > 1) {
-                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                updateCarousel();
-            }
-        }
-        
-        carouselTrack.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            pauseAllVideos();
-        });
-        
-        carouselTrack.addEventListener('touchend', (e) => {
-            endX = e.changedTouches[0].clientX;
-            const diffX = endX - startX;
-            if (diffX > 50) {
-                window.prevSlide();
-            } else if (diffX < -50) {
-                window.nextSlide();
-            } else {
-                playCurrentVideo();
-            }
-        });
-        
-        function showMessage(message) {
+        // --- Modal ---
+        function showMessage(message) { 
             const modal = document.getElementById('message-modal');
             const modalText = document.getElementById('modal-text');
-            modalText.textContent = message;
-            modal.classList.remove('hidden');
+            if (modalText) modalText.textContent = message;
+            if (modal) modal.classList.remove('hidden');
         }
+        window.closeModal = function() { document.getElementById('message-modal')?.classList.add('hidden'); } // Ajout ?.
 
-        window.closeModal = function() {
-            const modal = document.getElementById('message-modal');
-            modal.classList.add('hidden');
-        }
-
-        /**
-         * Construit le carrousel avec tous les médias (vidéos + images) pour toutes les variétés.
-         * @param {Object} product - Le produit actuel.
-         * @param {string} varietyToHighlight - La variété par défaut à sélectionner.
-         */
+        // --- Logique Page Produit (JS Corrigé pour .active) ---
         function updateProductCarousel(product, varietyToHighlight) {
-            carouselTrack.innerHTML = '';
-            currentProductMediaList = []; // Réinitialiser la liste complète des médias
-            currentSlide = 0; // Réinitialiser l'index
-
-            let allMedia = [];
-            let firstVarietySlideIndex = -1; 
-            
-            // Logique pour Cali US Loose (le produit avec plusieurs variétés de vidéos)
-            if (product.id === 'caliLoose') {
-                
-                // 1. Ajouter l'image de présentation en premier
-                allMedia.push({ url: CALI_LOOSE_PRESENTATION_IMAGE, variety: product.varieties[0], isImage: true });
-
-                // 2. Ajouter toutes les vidéos de toutes les variétés
-                product.varieties.forEach(vName => {
-                    const mediaUrls = CALI_LOOSE_MEDIA_MAP[vName] || [];
-                    mediaUrls.forEach(url => {
-                        allMedia.push({ url: url, variety: vName, isVideo: true });
-                    });
-                });
-            } 
-            // Logique pour Frozen Sift (UN SEUL media pour l'image et UN SEUL media pour la vidéo)
-            else if (product.id === 'frozenSift') {
-                 const defaultVariety = product.varieties[0];
-                 
-                 // 1. Ajouter la vidéo en premier
-                allMedia.push({ url: FROZEN_SIFT_VIDEO, variety: defaultVariety, isVideo: true });
-                
-                // 2. Ajouter l'image en second
-                allMedia.push({ url: FROZEN_SIFT_CARD_IMAGE, variety: defaultVariety, isImage: true });
-                
-                // Si Cali US Loose n'était pas un produit spécial, le Frozen Sift n'aurait pas besoin de toute cette logique de carrousel complexe.
-                // Ici, nous nous assurons que tous les slides sont associés à la première variété pour que la sélection de la variété ne change rien.
-                product.varieties.forEach(vName => {
-                     // S'assurer que chaque variété pointe vers le début du carrousel (où est la vidéo)
-                    if (vName !== defaultVariety) {
-                        allMedia.push({ url: FROZEN_SIFT_VIDEO, variety: vName, isVideo: true });
-                    }
-                });
-
-            }
-            else {
-                // Logique pour les autres produits
-                const defaultVariety = product.varieties.length > 0 ? product.varieties[0] : 'Standard';
-                
-                // Si le produit a des images définies
-                if (product.images && product.images.length > 0) {
-                    product.images.forEach(url => {
-                        allMedia.push({ url: url, variety: defaultVariety, isImage: true });
-                    });
-                }
-            }
-            
-            currentProductMediaList = allMedia;
-            
-            // 3. Construire les slides et trouver l'index de départ
-            allMedia.forEach((mediaItem, index) => {
-                const media = mediaItem.url;
-                const variety = mediaItem.variety;
-                const isVideo = mediaItem.isVideo; // Nouvelle propriété pour distinguer
-
-                const mediaElement = document.createElement('div');
-                mediaElement.className = 'carousel-item';
-                // Attacher la variété à l'élément de slide
-                mediaElement.setAttribute('data-variety', variety); 
-                
-                let content;
-                if (media.includes('youtube.com')) {
-                    content = `<iframe src="${media}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>`;
-                } else if (isVideo || media.includes('.mp4')) {
-                    // Utiliser le lien direct
-                    content = `<video controls autoplay loop muted playsinline class="w-full h-full"><source src="${media}" type="video/mp4"></video>`;
-                } else {
-                    content = `<img src="${media}" alt="${product.name}" class="w-full h-full">`;
-                }
-                mediaElement.innerHTML = content;
-                carouselTrack.appendChild(mediaElement);
-
-                // Définir l'index de départ sur le premier média de la variété sélectionnée
-                if (firstVarietySlideIndex === -1 && variety === varietyToHighlight) {
-                    firstVarietySlideIndex = index;
-                }
-            });
-
-            // Pour Frozen Sift, nous nous assurons que le carrousel ne contient que la vidéo (index 0) et l'image (index 1) et les slides suivants sont inutiles
-            if (product.id === 'frozenSift') {
-                while (carouselTrack.children.length > 2) {
-                    carouselTrack.removeChild(carouselTrack.lastChild);
-                }
-                currentSlide = 0; // Commencer par la vidéo
-            }
-
-
-            // 4. Définir le slide de départ
-            currentSlide = firstVarietySlideIndex !== -1 ? firstVarietySlideIndex : 0;
-            
-            // 5. Mettre à jour le carrousel (gère le transform et l'autoplay de la vidéo de départ)
-            updateCarousel();
+             if (!carouselTrack) return; 
+             carouselTrack.innerHTML = ''; currentSlide = 0;
+             // Utilise mediaMap pour trouver les bons médias
+            const mediaUrls = (product.mediaMap && product.mediaMap[varietyToHighlight]) 
+                              ? product.mediaMap[varietyToHighlight] 
+                              : product.images; // Fallback
+             
+             if (!mediaUrls || mediaUrls.length === 0) { carouselTrack.innerHTML = '<div class="carousel-item"><img src="https://placehold.co/600x600/1a1a2e/ffffff?text=Image+Indisponible" alt="Média indisponible"></div>'; return; }
+             
+             mediaUrls.forEach((url) => {
+                 const mediaElement = document.createElement('div'); 
+                 mediaElement.className = 'carousel-item'; 
+                 mediaElement.setAttribute('data-variety', varietyToHighlight); // Important pour la logique inversée
+                 let content = url.toLowerCase().includes('.mp4') ? `<video autoplay controls playsinline loop muted class="w-full h-full"><source src="${url}" type="video/mp4">Vidéo non supportée.</video>` : `<img src="${url}" alt="${product.name}" class="w-full h-full" onerror="this.src='https://placehold.co/600x400/2a2a47/fff?text=Img'; this.onerror=null;">`;
+                 mediaElement.innerHTML = content; 
+                 carouselTrack.appendChild(mediaElement);
+             });
+             updateCarousel();
         }
-
-
+        
+        // --- FONCTION CORRIGÉE ---
         window.selectVariety = function(variety, event) {
-            // 1. Mettre à jour l'état visuel des boutons
-            document.querySelectorAll('.variety-btn').forEach(b => b.classList.remove('bg-gray-700'));
-            
-            if (variety) {
-                if (event) {
-                    event.currentTarget.classList.add('bg-gray-700');
-                } else {
-                     // Si appelé par updateCarousel, trouver et activer le bouton
-                     const targetBtn = document.querySelector(`[data-value="${variety}"]`);
-                     if(targetBtn) { targetBtn.classList.add('bg-gray-700'); }
-                }
-                selectedVariety = variety;
-            }
-            
-            // 2. Si un événement de clic est présent et que le produit est CaliLoose ou FrozenSift, faire sauter le carrousel au premier média de cette variété
-            if (event && (currentProduct.id === 'caliLoose' || currentProduct.id === 'frozenSift')) {
-                const totalSlides = carouselTrack.children.length;
-                let targetIndex = -1;
-                
-                // Trouver le premier slide qui correspond à la variété sélectionnée
-                for (let i = 0; i < totalSlides; i++) {
-                    if (carouselTrack.children[i].getAttribute('data-variety') === selectedVariety) {
-                        targetIndex = i;
-                        break;
-                    }
-                }
-                
-                if (targetIndex !== -1 && targetIndex !== currentSlide) {
-                    currentSlide = targetIndex;
-                    updateCarousel(); // Met à jour l'affichage
-                }
-            }
+             document.querySelectorAll('.variety-btn').forEach(b => b.classList.remove('active')); 
+             
+             if (event) { // Clic sur un bouton
+                 event.currentTarget.classList.add('active'); 
+             } else { // Appel depuis le carrousel
+                 const targetBtn = document.querySelector(`#product-options .variety-btn[data-value="${variety}"]`); 
+                 if(targetBtn) targetBtn.classList.add('active'); 
+             }
+             
+             selectedVariety = variety; 
+             
+             // Ne met à jour le carrousel que si c'est un clic (pour éviter boucle infinie)
+             if (event && currentProduct.mediaMap) {
+                 updateProductCarousel(currentProduct, variety);
+             }
         };
-
 
         function showProduct(productId) {
-            currentProduct = products[productId];
-            if (!currentProduct) {
-                console.error("Produit non trouvé:", productId);
-                return;
-            }
-            
-            productName.textContent = currentProduct.name;
-            productCategoryTitle.textContent = currentProduct.category.toUpperCase();
-            
-            // Sélectionner la première variété par défaut
+            currentProduct = products[productId]; if (!currentProduct) return;
+            if (productName) productName.textContent = currentProduct.name; 
+            if (productCategoryTitle) productCategoryTitle.textContent = currentProduct.category.toUpperCase();
             selectedVariety = currentProduct.varieties.length > 0 ? currentProduct.varieties[0] : null;
-
-            // Afficher les options
-            productOptions.innerHTML = `
-                <div class="mb-6"> <!-- Changement de mb-4 à mb-6 pour l'écart -->
-                    <h3 class="text-xl font-bold mb-2">Variété:</h3>
-                    <div class="flex flex-wrap gap-2" id="variety-options">
-                        ${currentProduct.varieties.map((v, i) => `
-                            <button data-value="${v}" class="px-3 py-1 rounded-full border border-gray-600 hover:bg-gray-700 transition-colors text-xs variety-btn" onclick="selectVariety('${v}', event)">${v}</button>
-                        `).join('')}
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-2">Poids et Prix:</h3>
-                    <div class="flex flex-wrap gap-2" id="weight-options">
-                        ${Object.keys(currentProduct.prices).map((w, i) => `
-                            <button data-weight="${w}" class="weight-button" onclick="selectWeight('${w}')">
-                                <span class="weight-text">${w}</span>
-                                <span class="price-text">${currentProduct.prices[w]}€</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
             
-            // Activer le bouton de la variété par défaut
-            if (selectedVariety) {
-                window.selectVariety(selectedVariety);
-            }
-
-            // Activer le premier poids par défaut
-            const firstWeightBtn = document.querySelector('#weight-options .weight-button');
-            if (firstWeightBtn) {
-                firstWeightBtn.classList.add('active');
-                selectedWeight = firstWeightBtn.dataset.weight;
+            let varietyHTML = ''; 
+            const showVarieties = !(currentProduct.varieties.length === 1 && currentProduct.varieties[0] === currentProduct.name);
+            
+            if (currentProduct.varieties && currentProduct.varieties.length > 0 && showVarieties) { 
+                varietyHTML = `<div class="mb-6"><h3 class="text-xl font-bold mb-3">Variété:</h3><div class="flex flex-wrap gap-2" id="variety-options">${currentProduct.varieties.map(v => `<button data-value="${v}" class="px-4 py-1.5 rounded-full border hover:bg-gray-700 transition-colors text-xs variety-btn" onclick="selectVariety('${v}', event)">${v}</button>`).join('')}</div></div>`; 
             }
             
-            // Remplir le carrousel avec TOUTES les vidéos/images des variétés
+            let weightHTML = ''; 
+            if (currentProduct.prices) { 
+                weightHTML = `<div><h3 class="text-xl font-bold mb-3">Poids et Prix:</h3><div class="flex flex-wrap gap-3" id="weight-options">${Object.keys(currentProduct.prices).map(w => `<button data-weight="${w}" class="weight-button" onclick="selectWeight('${w}')"><span class="weight-text">${w}</span><span class="price-text">${currentProduct.prices[w]}€</span></button>`).join('')}</div></div>`; 
+            }
+            
+            if (productOptions) productOptions.innerHTML = varietyHTML + weightHTML;
+            
+            const firstVarietyBtn = document.querySelector('#variety-options .variety-btn');
+            if(firstVarietyBtn && selectedVariety){
+                 firstVarietyBtn.classList.add('active');
+            }
+            
+            const firstWeightBtn = document.querySelector('#weight-options .weight-button'); 
+            if (firstWeightBtn) { 
+                firstWeightBtn.classList.add('active'); 
+                selectedWeight = firstWeightBtn.dataset.weight; 
+            }
+            
             updateProductCarousel(currentProduct, selectedVariety); 
-
-            mainApp.classList.add('hidden');
-            productPage.classList.remove('hidden');
-            
-            window.scrollTo(0, 0); 
+            mainApp?.classList.add('hidden'); 
+            productPage?.classList.remove('hidden'); 
+            window.scrollTo(0, 0);
         }
 
-        window.selectWeight = function(weight) {
-            selectedWeight = weight;
-            document.querySelectorAll('.weight-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-weight="${weight}"]`).classList.add('active');
-        };
+        window.selectWeight = function(weight) { selectedWeight = weight; document.querySelectorAll('.weight-button').forEach(btn => btn.classList.remove('active')); document.querySelector(`[data-weight="${weight}"]`).classList.add('active'); };
 
-        window.showHome = function() {
-            closeCartPage();
-            pauseAllVideos();
-            productPage.classList.add('hidden');
-            mainApp.classList.remove('hidden');
-            currentFilter = null;
-            document.getElementById('weed-pill').classList.remove('active');
-            document.getElementById('hash-pill').classList.remove('active');
-            initProductGrid();
-        }
-
-        window.hideProduct = function() {
-            pauseAllVideos();
-            productPage.classList.add('hidden');
-            mainApp.classList.remove('hidden');
-        }
-
-        window.openCartPage = function() {
-            pauseAllVideos();
-            cartPage.classList.add('open');
-            mainApp.classList.add('hidden');
-            productPage.classList.add('hidden');
-            updateCartPage();
-        }
-
-        window.closeCartPage = function() {
-            cartPage.classList.remove('open');
-            mainApp.classList.remove('hidden');
-        }
-
+        // --- Navigation et Panier ---
+        window.showHome = function() { closeCartPage(); pauseAllVideos(); productPage?.classList.add('hidden'); mainApp?.classList.remove('hidden'); currentFilter = null; document.getElementById('weed-pill')?.classList.remove('active'); document.getElementById('hash-pill')?.classList.remove('active'); initProductGrid(); }
+        window.hideProduct = function() { pauseAllVideos(); productPage?.classList.add('hidden'); mainApp?.classList.remove('hidden'); }
+        window.openCartPage = function() { pauseAllVideos(); cartPage?.classList.add('open'); mainApp?.classList.add('hidden'); productPage?.classList.add('hidden'); updateCartPage(); }
+        window.closeCartPage = function() { cartPage?.classList.remove('open'); mainApp?.classList.remove('hidden'); }
         function updateCartPage() {
-            const cartItemsContainer = document.getElementById('cart-items-page');
-            cartItemsContainer.innerHTML = '';
-            let total = 0;
-            const items = Object.values(cartItems);
-
-            if (items.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="text-center text-gray-400">Votre panier est vide.</p>';
-                document.getElementById('cart-total-page').textContent = `0€`;
-                return;
-            }
-
-            items.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                const itemElement = document.createElement('div');
-                itemElement.className = 'cart-page-item';
-                const product = products[item.id.split('-')[0]];
-                
-                let imageUrl = 'https://placehold.co/600x600/1e293b/fff?text=Image';
-                if (product) {
-                    if (product.id === 'caliLoose') {
-                        // Utiliser l'image de présentation pour la vignette du panier
-                        imageUrl = CALI_LOOSE_PRESENTATION_IMAGE;
-                    } else if (product.id === 'frozenSift') {
-                        imageUrl = FROZEN_SIFT_CARD_IMAGE;
-                    } 
-                    else {
-                        // Utiliser le premier média non-vidéo comme vignette
-                        const firstImage = product.images.find(m => !m.includes('.mp4') && !m.includes('youtube.com')); 
-                        if (firstImage) {
-                            imageUrl = firstImage;
-                        } else if (product.images.length > 0) {
-                             imageUrl = product.images[0];
-                        }
-                    }
-                }
-
-                itemElement.innerHTML = `
-                    <div class="w-16 h-16 rounded-md overflow-hidden mr-4">
-                         <img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-semibold">${item.name}</h4>
-                        <p class="text-sm text-gray-400">${item.weight} - ${item.variety}</p>
-                        <p class="text-sm text-gray-400">Quantité: ${item.quantity}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-bold">${itemTotal}€</p>
-                        <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-400 transition-colors text-sm mt-1 active:scale-90">
-                            <i class="fas fa-trash-alt"></i> Supprimer
-                        </button>
-                    </div>
-                `;
+            const cartItemsContainer = document.getElementById('cart-items-page'); if (!cartItemsContainer) return; cartItemsContainer.innerHTML = ''; let total = 0; const items = Object.values(cartItems);
+            if (items.length === 0) { cartItemsContainer.innerHTML = '<p class="text-center text-gray-400 py-10">Votre panier est vide.</p>'; document.getElementById('cart-total-page').textContent = `0€`; return; }
+            items.forEach(item => { 
+                const itemTotal = item.price * item.quantity; total += itemTotal;
+                const itemElement = document.createElement('div'); itemElement.className = 'cart-page-item';
+                const product = products[item.id.split('-')[0]]; let imageUrl = product && product.images.length > 0 ? product.images[0] : 'https://placehold.co/100/1e293b/fff?text=Img';
+                itemElement.innerHTML = `<div class="w-16 h-16 rounded-lg overflow-hidden mr-4 flex-shrink-0"><img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100/2a2a47/fff?text=Img'; this.onerror=null;"></div><div class="flex-1 min-w-0"><h4 class="font-semibold truncate">${item.name}</h4><p class="text-sm text-gray-400 truncate">${item.weight} - ${item.variety}</p><p class="text-sm text-gray-400">Quantité: ${item.quantity}</p></div><div class="text-right ml-4 flex-shrink-0"><p class="font-bold">${itemTotal}€</p><button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-400 transition-colors text-xs mt-1 active:scale-90"><i class="fas fa-trash-alt mr-1"></i>Supprimer</button></div>`;
                 cartItemsContainer.appendChild(itemElement);
-            });
-            document.getElementById('cart-total-page').textContent = `${total}€`;
+             }); 
+             const totalPageEl = document.getElementById('cart-total-page');
+             if (totalPageEl) totalPageEl.textContent = `${total}€`;
         }
         
-        addToCartBtn.addEventListener('click', () => {
-            if (!selectedVariety || !selectedWeight) {
-                showMessage("Veuillez sélectionner une variété et un poids.");
-                return;
-            }
-            
-            const variety = selectedVariety;
-            const weight = selectedWeight;
-            const productId = currentProduct.id;
-            const price = currentProduct.prices[weight];
-            const quantity = 1;
-            const itemId = `${productId}-${weight}-${variety}`;
-
-            if (cartItems[itemId]) {
-                cartItems[itemId].quantity += quantity;
-            } else {
-                cartItems[itemId] = {
-                    id: itemId,
-                    name: currentProduct.name,
-                    variety: variety,
-                    weight: weight,
-                    price: price,
-                    quantity: quantity
-                };
-            }
-            saveCart();
-            showMessage(`"${variety} (${weight})" ajouté au panier !`);
-        });
-
-        buyNowBtn.addEventListener('click', () => {
-             if (!selectedVariety || !selectedWeight) {
-                showMessage("Veuillez sélectionner une variété et un poids.");
-                return;
-            }
-            
-            const variety = selectedVariety;
-            const weight = selectedWeight;
-            const price = currentProduct.prices[weight];
-            const quantity = 1;
-            const totalItemPrice = price * quantity;
-            
-            // Message format for instant buy
-            let message = `Bonjour, je souhaite commander :
-- ${currentProduct.name}
-- Variété: ${variety}
-- Poids: ${weight}
-- Quantité: ${quantity}
-- Prix total: ${totalItemPrice}€`;
-
-            const telegramUrl = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
-            window.location.href = telegramUrl;
-        });
-
-        window.removeFromCart = (itemId) => {
-            delete cartItems[itemId];
-            saveCart();
-            updateCartPage();
-        };
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', () => {
+                 if (!selectedVariety || !selectedWeight) { showMessage("Veuillez sélectionner une variété et un poids."); return; }
+                 const itemId = `${currentProduct.id}-${selectedWeight}-${selectedVariety}`;
+                 if (cartItems[itemId]) cartItems[itemId].quantity++; else cartItems[itemId] = { id: itemId, name: currentProduct.name, variety: selectedVariety, weight: selectedWeight, price: currentProduct.prices[selectedWeight], quantity: 1 };
+                 saveCart(); showMessage(`"${selectedVariety} (${selectedWeight})" ajouté au panier !`);
+             });
+        }
         
-        window.clearCart = () => {
-            cartItems = {};
-            saveCart();
-            updateCartPage();
-        };
-
+        if (buyNowBtn) {
+            buyNowBtn.addEventListener('click', () => {
+                 if (!selectedVariety || !selectedWeight) { showMessage("Veuillez sélectionner une variété et un poids."); return; }
+                 const totalItemPrice = currentProduct.prices[selectedWeight];
+                 let message = `Bonjour, je souhaite commander :\n- ${currentProduct.name}\n- Variété: ${selectedVariety}\n- Poids: ${selectedWeight}\n- Quantité: 1\n- Prix total: ${totalItemPrice}€`;
+                 window.location.href = `https://t.me/Dailyhash?text=${encodeURIComponent(message)}`;
+             });
+        }
+        
+        window.removeFromCart = (itemId) => { delete cartItems[itemId]; saveCart(); updateCartPage(); };
+        window.clearCart = () => { if(confirm("Vider le panier ?")) { cartItems = {}; saveCart(); updateCartPage(); } };
         window.placeOrder = () => {
-            const items = Object.values(cartItems);
-            if (items.length === 0) {
-                showMessage("Votre panier est vide. Ajoutez des produits avant de commander.");
-                return;
-            }
-            
-            let messageHeader = "Salut, je voudrais passer une commande : ";
-            let itemsString = "";
-            let total = 0;
+             const items = Object.values(cartItems); if (items.length === 0) { showMessage("Votre panier est vide."); return; }
+             let itemsString = ""; let total = 0;
+             items.forEach((item, i) => { const itemTotal = item.price * item.quantity; itemsString += `[${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${itemTotal}€]${i < items.length - 1 ? " | " : ""}`; total += itemTotal; });
+             const fullMessage = `Salut, je voudrais passer une commande : ${itemsString} | Total de la commande : ${total}€ | Merci !`;
+             window.location.href = `https://t.me/Dailyhash?text=${encodeURIComponent(fullMessage)}`;
+             cartItems = {}; saveCart(); updateCartPage(); 
+         };
 
-            items.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                
-                // Format de chaque article : [Nom (Variété, Poids) x Quantité -> Prix]
-                itemsString += `[${item.name} (${item.variety}, ${item.weight}) x ${item.quantity} -> ${itemTotal}€]`;
+        // --- Initialisation ---
+        document.addEventListener('DOMContentLoaded', () => {
+             if (productGrid) initProductGrid();
+             if (heroCarouselTrack && heroCarouselDots) {
+                 updateHeroCarousel();
+                 startHeroCarousel();
+             }
+             if (cartCounter) updateCartCounter();
+         });
 
-                total += itemTotal;
-
-                // Ajouter un séparateur simple entre les articles (sauf le dernier)
-                if (index < items.length - 1) {
-                    itemsString += " | ";
-                }
-            });
-            
-            let messageFooter = `Total de la commande : ${total}€`;
-            
-            // Concaténer le tout sans saut de ligne, juste des espaces
-            const fullMessage = `${messageHeader} ${itemsString} | ${messageFooter} | Merci !`;
-
-            // Encodage
-            const encodedMessage = encodeURIComponent(fullMessage);
-            
-            const telegramUrl = `https://t.me/Dailyhash?text=${encodedMessage}`;
-            window.location.href = telegramUrl;
-            
-            cartItems = {};
-            saveCart();
-            updateCartPage();
-        };
-
-        window.showProduct = showProduct;
-        window.hideProduct = hideProduct;
-        window.openCartPage = openCartPage;
-        window.closeCartPage = closeCartPage;
-        window.closeModal = closeModal;
-        window.selectWeight = selectWeight;
+        window.showProduct = showProduct; window.hideProduct = hideProduct; window.openCartPage = openCartPage; window.closeCartPage = closeCartPage; window.closeModal = closeModal; window.selectWeight = selectWeight;
     </script>
 </body>
 </html>
+
+  
