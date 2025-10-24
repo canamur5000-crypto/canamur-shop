@@ -523,12 +523,12 @@
             <span class="text-xs mt-1">Accueil</span>
         </a>
       
-        <a href="https://www.instagram.com/canamur5k?igsh=dWgwb2htajhrNmxr" target="_blank" class="nav-link flex flex-col items-center">
+        <a href="https://www.instagram.com/canamur5k?igsh=MXdxYjZ6dm1yOGky" target="_blank" class="nav-link flex flex-col items-center">
             <i class="fab fa-instagram text-xl"></i>
             <span class="text-xs mt-1">Instagram</span>
         </a>
           
-        <a href="https://ptwdym158.org/joinchat/FkOZE0oD8eo3INM2P26gaA" target="_blank" class="nav-link flex flex-col items-center">
+        <a href="https://ptwdym158.org/DailyHash" target="_blank" class="nav-link flex flex-col items-center">
             <i class="fas fa-link text-xl"></i>
             <span class="text-xs mt-1">Potato</span>
         </a>
@@ -564,19 +564,23 @@
         },
         "category": "weed",
         "varieties": [
-            "White Runtz"
+            "Weeding Cake",
+            "Candy gelato"
         ],
         "images": [
             "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/preview.png"
         ],
         "mediaMap": {
-            "White Runtz": [
-                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/preview.png",
-                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/nwhite%20runtz.mp4"
+            "Weeding Cake": [
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/weedingcake.mp4"
+            ],
+            "Candy gelato": [
+                "https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Candy%20gelato.mp4"
             ]
         },
-        "extraInfo": "TOP QUALITE ",
-        "extraInfoColor": "#a78bfa",
+        "extraInfo": "FULL TERPS ",
+        "extraInfoColor": "#d6d0e7",
+        "extraInfoBackgroundColor": "#1bb625",
         "color": "#ffffff",
         "cardColor": "#2a2a47"
     },
@@ -615,6 +619,7 @@
         },
         "extraInfo": "NEW SEASON",
         "extraInfoColor": "#34d399",
+        "extraInfoBackgroundColor": "#000000",
         "color": "#ffffff",
         "cardColor": "#2a2a47"
     }
@@ -623,21 +628,6 @@
         // #############################################################
         // # FIN DE L'INJECTION DE DONNÉES
         // #############################################################
-
-        // --- CONSTANTES SPÉCIFIQUES (copiées de votre script) ---
-        // Remarque: Celles-ci ne sont plus utilisées par la logique de base, 
-        // mais conservées si vous avez des produits qui y font référence.
-        const BASE_URL = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/';
-        const CALI_LOOSE_PRESENTATION_IMAGE = BASE_URL + 'preview.png';
-        const FROZEN_SIFT_CARD_IMAGE = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/Screenshot_20251012_222246_Chrome.jpg'; 
-        const FROZEN_SIFT_VIDEO = 'https://raw.githubusercontent.com/canamur5000-crypto/canamur-shop/main/vluggejapieterpz-20251012-0001.mp4';
-        const CALI_LOOSE_MEDIA_MAP = {
-            'White Runtz': [BASE_URL + 'nwhite%20runtz.mp4'],
-            'Weeding Crasher': [BASE_URL + 'Weeding%20.mp4'],
-            'Lemon Cherry Runtz': ['https://placehold.co/600x600/1a1a2e/ffffff?text=Video+Lemon+Cherry']
-        };
-        // --- FIN DES CONSTANTES SPÉCIFIQUES ---
-
         
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
         let currentFilter = null;
@@ -748,7 +738,8 @@
                     let extraInfo = '';
                     if (product.extraInfo) {
                          const infoTextColor = product.extraInfoColor || '#34d399'; // Applique couleur texte info
-                         extraInfo += `<p class="text-xs font-bold mt-1"><span class="bg-black/50 px-2 py-0.5 rounded-full inline-block" style="color: ${infoTextColor};">${product.extraInfo.toUpperCase()}</span></p>`;
+                         const infoBgColor = product.extraInfoBackgroundColor || '#000000'; // NOUVEAU
+                         extraInfo += `<p class="text-xs font-bold mt-1"><span class="px-2 py-0.5 rounded-full inline-block" style="color: ${infoTextColor}; background-color: ${infoBgColor};">${product.extraInfo.toUpperCase()}</span></p>`;
                     } else if (product.varieties && product.varieties.length > 1 && !(product.varieties.length === 1 && product.varieties[0] === product.name)) {
                          extraInfo += `<p class="text-xs font-bold mt-1"><span class="bg-purple-900/50 px-2 py-0.5 rounded-full inline-block text-purple-300">${product.varieties.length} VARIÉTÉS</span></p>`;
                     }
@@ -864,6 +855,7 @@
             selectedVariety = currentProduct.varieties.length > 0 ? currentProduct.varieties[0] : null;
             
             let varietyHTML = ''; 
+            // Ne pas afficher la section variété si une seule variété (qui est le nom du produit)
             const showVarieties = !(currentProduct.varieties.length === 1 && currentProduct.varieties[0] === currentProduct.name);
             
             if (currentProduct.varieties && currentProduct.varieties.length > 0 && showVarieties) { 
